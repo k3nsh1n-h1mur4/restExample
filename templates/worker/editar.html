@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% include '_helpers.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="main-cont">
+            <div class="cont-1">
+                <div class="form-group">
+                    <label for="app">Apellido Paterno:</label>
+                    <input type="text" name="app" value="{{ ctx.1 }}" placeholder="{{ ctx.1 }}" class="form-control">    
+                </div> 
+                <div class="form-group">
+                    <label for="apm">Apellido Materno:</label>
+                    <input type="text" name="apm" value="{{ ctx.2 }}" placeholder="{{ ctx.2 }}" class="form-control">    
+                </div>
+                <div class="form-group">
+                    <label for="">Nombres:</label>
+                    <input type="text" name="nombre" value="{{ ctx.3 }}" placeholder="{{ ctx.3 }}" class="form-control">    
+                </div><div class="form-group">
+                    <label for="">Edad:</label>
+                    <input type="text" name="edad" value="{{ ctx.4 }}" placeholder="{{ ctx.4 }}" class="form-control">    
+                </div><div class="form-group">
+                    <label for="">Matrícula:</label>
+                    <input type="text" name="matricula" value="{{ ctx.5 }}" placeholder="{{ ctx.5 }}" class="form-control">    
+                </div><div class="form-group">
+                    <label for="">Adscripción:</label>
+                    <input type="text" name="adscripcion" value="{{ ctx.6 }}" placeholder="{{ ctx.6 }}" class="form-control">    
+                </div><div class="form-group">
+                    <label for="">Categoría:</label>
+                    <input type="text" name="categoria" value="{{ ctx.7 }}" placeholder="{{ ctx.7 }}" class="form-control">    
+                </div><div class="form-group">
+                    <label for=""># Afiliación:</label>
+                    <input type="text" name="n_afil" value="{{ ctx.8 }}" placeholder="{{ ctx.8 }}" class="form-control">    
+                </div>
+            </div>
+            <div class="cont-2">
+                 <div class="form-group">
+                    <label for="">Calle:</label>
+                    <input type="text" name="calle" value="{{ ctx.9 }}" placeholder="{{ ctx.9 }}" class="form-control">    
+                </div> 
+                <div class="form-group">
+                    <label for="">Número Ext.:</label>
+                    <input type="text" name="num" value="{{ ctx.10 }}" placeholder="{{ ctx.10 }}" class="form-control">    
+                </div>
+                <div class="form-group">
+                    <label for="">Colonia:</label>
+                    <input type="text" name="col" value="{{ ctx.11 }}" placeholder="{{ ctx.11 }}" class="form-control">    
+                </div>
+                <div class="form-group">
+                    <label for="">Código Postal:</label>
+                    <input type="text" name="cp" value="{{ ctx.12 }}" placeholder="{{ ctx.12 }}" class="form-control">    
+                </div>
+                <div class="form-group">
+                    <label for="">Municipio:</label>
+                    <input type="text" name="mcpio" value="{{ ctx.13 }}" placeholder="{{ ctx.13 }}" class="form-control">    
+                </div>
+                <div class="form-group">
+                    <label for=""># Trabajo:</label>
+                    <input type="text" name="tel_t" value="{{ ctx.14 }}" placeholder="{{ ctx.14 }}" class="form-control">    
+                </div>
+                <div class="form-group">
+                    <label for=""># Personal:</label>
+                    <input type="text" name="tel_p" value="{{ ctx.15 }}" placeholder="{{ ctx.15 }}" class="form-control">    
+                </div>
+                <div class="form-group">
+                    <label for=""># Célular:</label>
+                    <input type="text" name="app" value="{{ ctx.0 }}" placeholder="{{ ctx.0 }}" class="form-control">    
+                </div>
+                <div class="form-group">
+                    <label for="">Entrega-Recepción</label>
+                    <input type="text" name="app" value="{{ ctx.0 }}" placeholder="{{ ctx.0 }}" class="form-control">    
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3">
+            <input type="submit" value="Registrar" class="btn btn-primary">
+        </div>
+
+    </form>
+
+    {{ form }}
+    
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Apellido Paterno</th>
+                            <th scope="col">Apellido Materno</th>
+                            <th scope="col">Nombres</th>
+                            <th scope="col">Fecha de Nacimiento:</th>
+                            <th scope="col">Edad</th>
+                            <th scope="col">Alergias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ctx in ctx %}
+                        <tr>
+                            <th scope="row">{{ ctx.0 }}</th>
+                            <td>{{ ctx.1 }}</td>
+                            <td>{{ ctx.2 }}</td>
+                            <td>{{ ctx.3 }}</td>
+                            <td>{{ ctx.4 }}</td>
+                            <td>{{ ctx.5 }}</td>
+                            <td>{{ ctx.6 }}</td>
+                            <td>
+                                <a href="#" class="btn btn-secondary">Ver Datos</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

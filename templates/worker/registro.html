@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% include '_helpers.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="main-cont">
+            <div class="cont-1">
+                <div class="fieldWrapper">
+                    <label for="{{ form.app.id_for_label }}">Apellido Paterno:</label>
+                    {{ form.app }}
+                </div> 
+                <div class="fieldWrapper">
+                    <label for="{{ form.apm.id_for_label }}">Apellido Materno:</label>
+                    {{ form.apm }}
+                </div>
+                <div class="fieldWrapper">
+                    <label for="{{ form.nombres.id_for_label }}">Nombres:</label>
+                    {{ form.nombres }}
+                </div><div class="fieldWrapper">
+                    <label for="{{ form.edad.id_for_label }}">Edad:</label>
+                    {{ form.edad }}
+                </div><div class="fieldWrapper">
+                    <label for="{{ form.matricula.id_for_label }}">Matrícula:</label>
+                    {{ form.matricula }}
+                </div><div class="fieldWrapper">
+                    <label for="{{ form.adscripcion.id_for_label }}">Adscripción:</label>
+                    {{ form.adscripcion }}
+                </div><div class="fieldWrapper">
+                    <label for="{{ form.categoria.id_for_label }}">Categoría:</label>
+                    {{ form.categoria }}
+                </div><div class="fieldWrapper">
+                    <label for="{{ form.n_afil.id_for_label }}"># Afiliación:</label>
+                    {{ form.n_afil }}
+                </div>
+            </div>
+            <div class="cont-2">
+                 <div class="fieldWrapper">
+                    <label for="{{ form.calle.id_for_label }}">Calle:</label>
+                    {{ form.calle }}
+                </div> 
+                <div class="fieldWrapper">
+                    <label for="{{ form.num.id_for_label }}">Número Ext.:</label>
+                    {{ form.num }}
+                </div>
+                <div class="fieldWrapper">
+                    <label for="{{ form.colonia.id_for_label }}">Colonia:</label>
+                    {{ form.colonia }}
+                </div>
+                <div class="fieldWrapper">
+                    <label for="{{ form.cp.id_for_label }}">Código Postal:</label>
+                    {{ form.cp }}
+                </div>
+                <div class="fieldWrapper">
+                    <label for="{{ form.mcpio.id_for_label }}">Municipio:</label>
+                    {{ form.mcpio }}
+                </div>
+                <div class="fieldWrapper">
+                    <label for="{{ form.tel_t.id_for_label }}"># Trabajo:</label>
+                    {{ form.tel_t }}
+                </div>
+                <div class="fieldWrapper">
+                    <label for="{{ form.tel_p.id_for_label }}"># Personal:</label>
+                    {{ form.tel_p }}
+                </div>
+                <div class="fieldWrapper">
+                    <label for="{{ form.tel_c.id_for_label }}"># Célular:</label>
+                    {{ form.tel_c }}
+                </div>
+                <div class="fieldWrapper">
+                    <label for="{{ form.entRec.id_for_label }}">Entrega-Recepción</label>
+                    {{ form.entRec }}
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3">
+            <input type="submit" value="Registrar" class="btn btn-primary">
+        </div>
+
+    </form>
+    
+
+{% endblock %}

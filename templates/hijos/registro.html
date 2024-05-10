@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <form method="POST" id="form-regh">
+        {% csrf_token %}
+        <div class="fieldWrapper">
+            <label for="{{ form.app.id_for_label }}">Apellido Paterno:</label>
+            {{ form.app }}
+        </div>
+        <div class="fieldWrapper">
+            <label for="{{ form.apm.id_for_label }}">Apellido Materno:</label>
+            {{ form.apm }}
+        </div>  
+         <div class="fieldWrapper">
+            <label for="{{ form.nombre.id_for_label }}">Nombre(s):</label>
+            {{ form.nombre }}
+        </div> 
+        <div class="fieldWrapper">
+            <label for="{{ form.f_nac.id_for_label }}">Fecha de Nacimiento:</label>
+            {{ form.f_nac }}
+        </div> 
+        <div class="fieldWrapper">
+            <label for="{{ form.edad.id_for_label }}">Edad:</label>
+            {{ form.edad }}
+        </div> 
+        <div class="fieldWrapper">
+            <label for="{{ form.alergias.id_for_label }}">Alergias:</label>
+            {{ form.alergias }}
+        </div>
+        
+        <div class="btns-div">
+        <div>
+            <input type="submit" value="Registrar" class="btn btn-primary">
+        </div>
+        <div>
+            <input type="submit" value="Calcular Edad" class="btn btn-secondary" id="btn-age">
+        </div>
+        </div>
+       
+    </form>
+{% endblock %}

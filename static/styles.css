@@ -1,0 +1,29 @@
+.main-cont {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 50px;
+}
+
+.cont-1 {
+    margin-right: 10px;
+}
+
+.cont-2 {
+    margin-left: 10px;
+}
+
+.button {
+    margin-top: 15px;
+}
+
+.btn-div {
+    margin-top: 15px;
+}
+
+
+.btns-div {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
