@@ -119,7 +119,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    '/Users/k3nsh1n/Dev/restExample/static',
+    #'/Users/k3nsh1n/Dev/restExample/static',
+    'C:/Users/jazyi/Dev/restExample/static',
 ]
 
 # Default primary key field type

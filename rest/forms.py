@@ -59,7 +59,7 @@ class regHForm(forms.Form):
     app = forms.CharField(label='Apellido Paterno', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     apm = forms.CharField(label='Apellido Materno', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     nombre = forms.CharField(label='Nombre(s)', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
-    f_nac = forms.DateField(label='Fecha de Nacimiento', widget=forms.DateInput(attrs={'class': 'form-control'}), required=False)
+    f_nac = forms.DateField(label='Fecha de Nacimiento', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'AAAA-M-D'}), required=False)
     edad = forms.FloatField(label='Edad', widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     alergias = forms.CharField(label='Alergias', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
 

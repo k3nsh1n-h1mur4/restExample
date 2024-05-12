@@ -10,4 +10,5 @@ urlpatterns = [
     path('listadop/', views.listadoP, name='listadop'),
     path('regh/<int:id>/', views.regh, name='regH'),
     path('listadoh/', views.listadoH, name='listadoH'),
+    path('save_edit/<int:id>/', views.save_edit, name='save_edit'),
 ]

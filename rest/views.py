@@ -1,4 +1,5 @@
 import sqlite3
+from sqlite3.dbapi2 import ProgrammingError
 from plyer import notification
 from datetime import datetime
 from django.contrib.auth.models import Group, User
@@ -58,9 +59,10 @@ def registro(request):
                 with sqlite3.connect("db.sqlite3") as cnx:
                     cur = cnx.cursor()
                     worker = cur.execute("INSERT INTO worker(app,apm,nombres,edad,matricula,adscripcion,categoria,n_afil,calle,num,colonia,cp,mcpio,tel_t,tel_p,tel_c,createdat, entRec)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", \
-                                (app,apm,nombres,edad,matricula,adscripcion,categoria,n_afil,calle,num,colonia,cp,mcpio,tel_t,tel_p,tel_c,createdat, entRec)) 
+                                (app.upper(),apm.upper(),nombres.upper(),edad,matricula,adscripcion.upper(),categoria.upper(),n_afil,calle.upper(),num,colonia.upper(),cp,mcpio.upper(),tel_t,tel_p,tel_c,entRec.upper(),createdat)) 
                     cnx.commit()
                     nt = notification.notify(title='Registro', message="Registro Realizado con éxito", timeout=10)
+                    return redirect('listado')
             except sqlite3.ProgrammingError as e:
                 raise e
             if worker is None:
@@ -105,6 +107,7 @@ def regauthper(request, id):
                     cur.execute("INSERT INTO authPer(app,apm,nombre,parentesco,tel,createdat,authPer_id_id)VALUES(?,?,?,?,?,?,?)", (app.upper(),apm.upper(),nombre.upper(),parentesco.upper(),tel,createdat,id))
                     cnx.commit()
                     nt = notification.notify(title='Registro', message="Registro Realizado con éxito", timeout=10)
+                    return redirect('listado')
             except sqlite3.ProgrammingError as e:
                 return e
     return render(request, 'authper/registro.html', {'title': title, 'form': form})
@@ -139,6 +142,7 @@ def regh(request, id):
             edad = form.cleaned_data['edad']
             alergias = form.cleaned_data['alergias']
             createdat = datetime.now()
+            print(app,apm,nombre)
             try:
                 with sqlite3.connect('db.sqlite3') as cnx:
                     cur = cnx.cursor()
@@ -146,6 +150,7 @@ def regh(request, id):
                         (app.upper(),apm.upper(),nombre.upper(),f_nac,edad,alergias.upper(),createdat,id))
                     cnx.commit()
                     nt = notification.notify(title='Registro Hijo', message='Registro Realizado con éxito', timeout=10)
+                    return redirect('listado')
             except sqlite3.ProgrammingError as e:
                 raise e
     return render(request, 'hijos/registro.html', {'form': form, 'title': title})
@@ -179,8 +184,41 @@ def editar(request, id):
                 cur.execute("SELECT * FROM worker WHERE id={0}".format(id))
                 ctx = cur.fetchone()
                 cnx.commit()
-                
         except sqlite3.ProgrammingError as e:
             raise e
-    
-    return render(request, 'worker/editar.html', {'title': title, 'form': form})
+    return render(request, 'worker/editar.html', {'title': title, 'form': form, 'ctx': ctx})
+
+
+def save_edit(request, id):
+    id = id
+    title = 'Guardar Edicion'
+    if request.method == 'POST':
+        form = workerUpdateForm(request.POST)
+        if form.is_valid():
+            app = form.cleaned_data['app']
+            apm = form.cleaned_data['apm'] 
+            nombres = form.cleaned_data['nombres'] 
+            edad = form.cleaned_data['edad'] 
+            matricula = form.cleaned_data['matricula'] 
+            adscripcion = form.cleaned_data['adscripcion'] 
+            categoria = form.cleaned_data['categoria'] 
+            n_afil = form.cleaned_data['n_afil'] 
+            calle = form.cleaned_data['calle'] 
+            num = form.cleaned_data['num'] 
+            colonia = form.cleaned_data['colonia'] 
+            cp = form.cleaned_data['cp'] 
+            mcpio = form.cleaned_data['mcpio'] 
+            tel_t = form.cleaned_data['tel_t'] 
+            tel_p = form.cleaned_data['tel_p'] 
+            tel_c = form.cleaned_data['tel_c'] 
+            createdat = datetime.now()
+            entRec = form.cleaned_data['entRec']
+            try:
+                with sqlite3.connect('db.sqlite3') as cnx:
+                    cur = cnx.cursor()
+                    cur.execute("UPDATE worker SET app=?,apm=?,nombres=?,edad=?,adscripcion=?,categoria=?,n_afil=?,calle=?,num=?,colonia=?,\
+                                cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,createdat=?,entRec=?", (app,apm,nombres,edad,adscripcion,categoria,n_afil,calle,num,\
+                                colonia,cp,mcpio,tel_p,tel_p,tel_c,createdat,entRec))
+            except sqlite3.ProgrammingError as e:
+                raise e
+    return render(request, 'index.html', {'title': title}) 

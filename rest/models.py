@@ -1,10 +1,38 @@
 import sqlite3
+from datetime import datetime
+from typing_extensions import Required
 from django.db import models
+from django.utils import timezone
+
 
 class workerModel(models.Model):
     class Meta:
         db_table = 'worker'
-        
+    ENTREC = [
+        ("CMNO","CMNO"),
+        ("HGR 45","HGR 45"),
+        ("HGR 46","HGR 46"),
+        ("HGR 110","HGR 110"),
+        ("HGR 180","HGR 180"),
+        ("HGZ 14","HGZ 14"),
+        ("HGZ 89","HGZ 89"),
+        ("UMF 1","UMF 1"),
+        ("UMF 2","UMF 2"),
+        ("UMF 34","UMF 34"),
+        ("UMF 39","UMF 39"),
+        ("UMF 51","UMF 51"),
+        ("UMF 52","UMF 52"),
+        ("UMF 53","UMF 53"),
+        ("UMF 54","UMF 54"),
+        ("UMF 88","UMF 88"),
+        ("UMF 93","UMF 93"),
+        ("UMF 171","UMF 171"),
+        ("UMF 178","UMF 178"),
+        ("UMF 184","UMF 184"),
+        ("SUB-DEL HIDALGO", "SUB-DEL HIDALGO"),
+        ("SUB-DEL JUAREZ","SUB-DEL JUAREZ"),
+        ("SNTSS","SNTSS"),
+    ]   
     id = models.BigAutoField(primary_key=True)
     app = models.CharField(max_length=150)
     apm = models.CharField(max_length=150)
@@ -22,8 +50,8 @@ class workerModel(models.Model):
     tel_t = models.CharField(max_length=10)
     tel_p = models.CharField(max_length=10)
     tel_c = models.CharField(max_length=10)
-    createdat = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    entRec = models.CharField(max_length=180)
+    entRec = models.CharField(max_length=100, choices=ENTREC, blank=True, null=True, default='CMNO')
+    createdat = models.DateTimeField(null=True, blank=True, default=datetime.now())
     
     def __str__(self):
         return '%s' % nombres
