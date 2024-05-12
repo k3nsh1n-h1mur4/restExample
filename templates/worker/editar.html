@@ -73,7 +73,30 @@
                 </div>
                 <div class="form-group">
                     <label for="">Entrega-Recepción</label>
-		    <input type="text" name="entRec" value="{{ ctx.17 }}" placeholder="{{ ctx.17 }}" class="form-control">    
+		    <select name="entRec" value="{{ ctx.18 }}" placeholder="{{ ctx.18 }}" class="form-control">
+			<option value="CMNO">CMNO</option>
+			<option value="HGR 45">HRG 45</option>
+			<option value="HGR 46">HGR 46</option>
+			<option value="HGR 110">HGR 110</option>
+			<option value="HGR 180">HGR 180</option>
+			<option value="HGZ 14">HGZ 14</option>
+			<option value="HGZ 89">HGZ 89</option>
+			<option value="UMF 001">UMF 001</option>
+			<option value="UMF 002">UMF 002</option>
+			<option value="UMF 034">UMF 034</option>
+			<option value="UMF 039">UMF 039</option>
+			<option value="UMF 051">UMF 051</option>
+			<option value="UMF 052">UMF 052</option>
+			<option value="UMF 053">UMF 053</option>
+			<option value="UMF 054">UMF 054</option>
+			<option value="UMF 088">UMF 088</option>
+			<option value="UMF 093">UMF 093</option>
+			<option value="UMF 171">UMF 171</option>
+			<option value="UMF 178">UMF 178</option>
+			<option value="UMF 184">UMF 184</option>
+			<option value="SUB-DEL HIDALGO">SUB-DEL HIDALGO</option>
+			<option value="SUB-DEL JUAREZ">SUB-DEL JUAREZ</option>
+			<option value="SNTSS">SNTSS</option>
                 </div>
             </div>
         </div>
@@ -83,8 +106,5 @@
 
     </form>
 
-
-    {{ ctx }}
-    
 
 {% endblock %}

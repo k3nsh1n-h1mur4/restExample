@@ -211,14 +211,16 @@ def save_edit(request, id):
             tel_t = form.cleaned_data['tel_t'] 
             tel_p = form.cleaned_data['tel_p'] 
             tel_c = form.cleaned_data['tel_c'] 
-            createdat = datetime.now()
             entRec = form.cleaned_data['entRec']
+            createdat = datetime.now()
             try:
                 with sqlite3.connect('db.sqlite3') as cnx:
                     cur = cnx.cursor()
-                    cur.execute("UPDATE worker SET app=?,apm=?,nombres=?,edad=?,adscripcion=?,categoria=?,n_afil=?,calle=?,num=?,colonia=?,\
-                                cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,createdat=?,entRec=?", (app,apm,nombres,edad,adscripcion,categoria,n_afil,calle,num,\
-                                colonia,cp,mcpio,tel_p,tel_p,tel_c,createdat,entRec))
+                    cur.execute("UPDATE worker SET app=?,apm=?,nombres=?,edad=?,matricula=?,adscripcion=?,categoria=?,n_afil=?,calle=?,num=?,colonia=?,\
+                                cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,entRec=?,createdat=?", (app,apm,nombres,edad,matricula,adscripcion,categoria,n_afil,calle,num,\
+                                colonia,cp,mcpio,tel_t,tel_p,tel_c,entRec,createdat))
+                nt = notification.notify(title='Actualizacion', message='Datos actualizados', timeout=10)
+                return redirect('listado')
             except sqlite3.ProgrammingError as e:
                 raise e
     return render(request, 'index.html', {'title': title}) 
