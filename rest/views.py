@@ -9,7 +9,7 @@ from .serializers import GroupSerializer, UserSerializer
 
 
 from django.shortcuts import render, redirect
-from rest.forms import workerForm, authPerForm, regHForm, workerUpdateForm
+from rest.forms import workerForm, authPerForm, regHForm, workerUpdateForm, authPerUpdateForm, regHUpdateForm
 from rest.models import workerModel
 
 
@@ -224,3 +224,47 @@ def save_edit(request, id):
             except sqlite3.ProgrammingError as e:
                 raise e
     return render(request, 'index.html', {'title': title}) 
+
+
+
+def editar_authPer(request, id):
+    id = id
+    title = "Editar Datos"
+    form = authPerUpdateForm()
+    if request.method == 'GET':
+        try:
+            with sqlite3.connect('db.sqlite3') as cnx:
+                cur = cnx.cursor()
+                cur.execute("SELECT * FROM authPer WHERE id={0}".format(id))
+                ctx = cur.fetchone()
+                cnx.commit()
+        except sqlite3.ProgrammingError as e:
+            raise e
+    return render(request, 'authper/editPer.html', {'title': title, 'form': form, 'ctx': ctx})
+
+
+
+def save_edit_p(request, id):
+    id = id
+    title = 'Editar Datos Personas Autorizadas'
+    if request.method == 'POST':
+        form = authPerUpdateForm(request.POST)
+        if form.is_valid():
+            app = form.cleaned_data['app']
+            apm = form.cleaned_data['apm']
+            nombre = form.cleaned_data['nombre']
+            parentesco = form.cleaned_data['parentesco']
+            tel = form.cleaned_data['tel']
+            createdat = datetime.now()
+            try:
+                with sqlite3.connect('db.sqlite3') as cnx:
+                    cur = cnx.cursor()
+                    cur.execute("UPDATE authPer SET app=?,apm=?,nombre=?,parentesco=?,tel=?,createdat=?,authPer_id_id=?", (app.upper(),apm.upper(), nombre.upper(),parentesco.upper(),tel,createdat,id))
+                    cnx.commit()
+                nt = notification.notify(title='Actualizar Datos', message='Datos actualizados', timeout=10)
+                return redirect('listadop')
+            except sqlite3.ProgrammingError as e:
+                raise e
+    return render(request, 'authPer/editPer.html', {'title': title})
+
+

@@ -109,3 +109,22 @@ class workerUpdateForm(forms.Form):
     tel_c = forms.CharField(label='# Célular', max_length=10, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     entRec = forms.ChoiceField(label='Entrega-Recepción', widget=forms.Select(attrs={'class': 'form-control'}), required=False, choices=ENTREC,)
 
+
+class authPerUpdateForm(forms.Form):
+    app = forms.CharField(label='Apelliod Paterno', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    apm = forms.CharField(label='Apellido Materno', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    nombre = forms.CharField(label='Nombre(s)', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    parentesco = forms.CharField(label='Parentesco', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    tel = forms.CharField(label='Teléfono', max_length=30, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    #authPer_id = forms.ForeignKey(workerModel, on_delete=forms.CASCADE)
+    #createdat = forms.DateTimeField(auto_now_add=True)
+
+class regHUpdateForm(forms.Form):    
+    app = forms.CharField(label='Apellido Paterno', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    apm = forms.CharField(label='Apellido Materno', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    nombre = forms.CharField(label='Nombre(s)', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    f_nac = forms.DateField(label='Fecha de Nacimiento', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'AAAA-M-D'}), required=False)
+    edad = forms.FloatField(label='Edad', widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    alergias = forms.CharField(label='Alergias', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+
+
