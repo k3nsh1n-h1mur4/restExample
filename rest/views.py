@@ -217,8 +217,8 @@ def save_edit(request, id):
                 with sqlite3.connect('db.sqlite3') as cnx:
                     cur = cnx.cursor()
                     cur.execute("UPDATE worker SET app=?,apm=?,nombres=?,edad=?,matricula=?,adscripcion=?,categoria=?,n_afil=?,calle=?,num=?,colonia=?,\
-                                cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,entRec=?,createdat=?", (app,apm,nombres,edad,matricula,adscripcion,categoria,n_afil,calle,num,\
-                                colonia,cp,mcpio,tel_t,tel_p,tel_c,entRec,createdat))
+                                cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,entRec=?,createdat=? WHERE id=?", (app,apm,nombres,edad,matricula,adscripcion,categoria,n_afil,calle,num,\
+                                colonia,cp,mcpio,tel_t,tel_p,tel_c,entRec,createdat,id))
                 nt = notification.notify(title='Actualizacion', message='Datos actualizados', timeout=10)
                 return redirect('listado')
             except sqlite3.ProgrammingError as e:
@@ -259,7 +259,7 @@ def save_edit_p(request, id):
             try:
                 with sqlite3.connect('db.sqlite3') as cnx:
                     cur = cnx.cursor()
-                    cur.execute("UPDATE authPer SET app=?,apm=?,nombre=?,parentesco=?,tel=?,createdat=?,authPer_id_id=?", (app.upper(),apm.upper(), nombre.upper(),parentesco.upper(),tel,createdat,id))
+                    cur.execute("UPDATE authPer SET app=?,apm=?,nombre=?,parentesco=?,tel=?,createdat=?,authPer_id_id=? WHERE id=?", (app.upper(),apm.upper(), nombre.upper(),parentesco.upper(),tel,createdat,id, id))
                     cnx.commit()
                 nt = notification.notify(title='Actualizar Datos', message='Datos actualizados', timeout=10)
                 return redirect('listadop')
