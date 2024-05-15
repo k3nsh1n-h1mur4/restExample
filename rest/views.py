@@ -9,6 +9,7 @@ from .serializers import GroupSerializer, UserSerializer
 
 
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from rest.forms import workerForm, authPerForm, regHForm, workerUpdateForm, authPerUpdateForm, regHUpdateForm
 from rest.models import workerModel
 
@@ -85,6 +86,28 @@ def listado(request):
         except sqlite3.ProgrammingError as e:
             return e
     return render(request, 'worker/listado.html', {'ctx': ctx, 'title': title})
+
+
+def delete(request, id):
+    id = id
+    print(id)
+    title = 'Eliminar Registro'
+    if request.method == 'POST':
+        print(request.method)
+        try:
+            with sqlite3.connect('db.sqlite3') as cnx:
+                cur = cnx.cursor()
+                cur.execute("DELETE FROM worker WHERE id=?",(id))
+                cnx.commit()
+                return redirect('listado')
+            nt = notification.notify(title='Eliminar', message='Registro Eliminado', timeout=10)
+        except sqlite3.ProgrammingError as e:
+            print(e)
+    response = HttpResponse("Registro ELiminado", content_type="application/json")
+    return response
+                
+                
+                
    
    
 def regauthper(request, id):
