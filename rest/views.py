@@ -2,6 +2,10 @@ import sqlite3
 from sqlite3.dbapi2 import ProgrammingError
 from plyer import notification
 from datetime import datetime
+from reportlab.pdfgen import canvas
+from PIL import Image
+import qrcode
+
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets
 
@@ -289,5 +293,38 @@ def save_edit_p(request, id):
             except sqlite3.ProgrammingError as e:
                 raise e
     return render(request, 'authPer/editPer.html', {'title': title})
+
+
+def create_cred(request, id):
+    id = id
+    title = 'Crear Credencial'                      
+    try:
+        #img = Image.open('/Users/k3nsh1n/Dev/restExample/static/cred.png')
+        #img.show()
+        with sqlite3.connect('db.sqlite3') as cnx:
+            cnx.row_factory = sqlite3.Row
+            cur = cnx.cursor() 
+            cur.execute("SELECT * FROM registerH WHERE id={0}".format(id))
+            ctx = cur.fetchone()
+            cur1 = cnx.cursor()
+            cur1.execute("SELECT * FROM worker, authPer, registerH WHERE id=?", id)
+            ctx1 = cur1.fetchall()
+            print(ctx1)
+            cnx.commit()
+            nombre = ctx[1] + ' ' + ctx[2] + ' ' + ctx[3]
+            
+            qrImage = qrcode.make(ctx)
+            qrImage.save("qrcodeImage.png")
+            #print(nombre)
+            c = canvas.Canvas('credencialpdf.pdf')
+            c.drawImage('/Users/k3nsh1n/Dev/restExample/static/cred.png', x=10, y=400, width=575, height=400)
+            c.setFont('Helvetica', size=10)
+            c.drawString(x=47, y=450, text=nombre)
+            c.showPage()
+            c.save()
+    except OSError as e:
+        raise e
+    response = HttpResponse('Credencial Generada', 'application/json')
+    return response
 
 
