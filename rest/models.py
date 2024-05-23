@@ -96,7 +96,7 @@ class regH(models.Model):
     f_nac = models.DateField()
     edad = models.FloatField()
     alergias = models.CharField(max_length=150)
-    regp_id = models.ForeignKey(workerModel, on_delete=models.CASCADE)
+    worker_id = models.ForeignKey(workerModel, on_delete=models.CASCADE)
     createdat = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

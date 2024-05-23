@@ -173,7 +173,7 @@ def regh(request, id):
             try:
                 with sqlite3.connect('db.sqlite3') as cnx:
                     cur = cnx.cursor()
-                    cur.execute("INSERT INTO registerH(app,apm,nombre,f_nac,edad,alergias,createdat,regp_id_id)VALUES(?,?,?,?,?,?,?,?)", \
+                    cur.execute("INSERT INTO registerH(app,apm,nombre,f_nac,edad,alergias,createdat,worker_id_id)VALUES(?,?,?,?,?,?,?,?)", \
                         (app.upper(),apm.upper(),nombre.upper(),f_nac,edad,alergias.upper(),createdat,id))
                     cnx.commit()
                     nt = notification.notify(title='Registro Hijo', message='Registro Realizado con éxito', timeout=10)
@@ -295,6 +295,23 @@ def save_edit_p(request, id):
     return render(request, 'authPer/editPer.html', {'title': title})
 
 
+def datos(request, id):
+    id = id
+    title = 'Mostrar Datos'
+    if request.method == 'GET':
+        try:
+            with sqlite3.connect('db.sqlite3') as cnx:
+                cur = cnx.cursor()
+                cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and worker.id={0}""".format(id))
+                result = cur.fetchall()
+                print(result)
+                cnx.commit()
+                for i in result:
+                    print(type(i))
+        except sqlite3.ProgrammingError as e:
+            print(e)
+    return render(request, 'worker/datos.html', {'ctx': i})
+
 def create_cred(request, id):
     id = id
     title = 'Crear Credencial'                      
@@ -302,19 +319,21 @@ def create_cred(request, id):
         #img = Image.open('/Users/k3nsh1n/Dev/restExample/static/cred.png')
         #img.show()
         with sqlite3.connect('db.sqlite3') as cnx:
-            cnx.row_factory = sqlite3.Row
+            #cnx.row_factory = sqlite3.Row
             cur = cnx.cursor() 
-            cur.execute("SELECT * FROM registerH WHERE id={0}".format(id))
-            ctx = cur.fetchone()
-            cur1 = cnx.cursor()
-            cur1.execute("SELECT * FROM worker, authPer, registerH WHERE id=?", id)
-            ctx1 = cur1.fetchall()
-            print(ctx1)
+            cur.execute("SELECT * FROM worker,authPer,registerH on worker.id=authPer.authPer_id_id and worker.id=registerH.worker_id_id WHERE worker.id={0}".format(id))
+            ctx = cur.fetchmany(3)
             cnx.commit()
-            nombre = ctx[1] + ' ' + ctx[2] + ' ' + ctx[3]
-            
-            qrImage = qrcode.make(ctx)
-            qrImage.save("qrcodeImage.png")
+            nombre = 'Isaac'
+            print(ctx)
+            print(f'La longituf es: %s' + str(len(ctx)))
+            for i in ctx:
+                print(i[0])
+                print(i[1])
+                print(type(i))
+            #create_qr(id)
+            #qrImage = qrcode.make(i)
+            #qrImage.save("qrcodeImage.png")
             #print(nombre)
             c = canvas.Canvas('credencialpdf.pdf')
             c.drawImage('/Users/k3nsh1n/Dev/restExample/static/cred.png', x=10, y=400, width=575, height=400)
