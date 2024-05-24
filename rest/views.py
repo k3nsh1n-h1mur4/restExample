@@ -321,16 +321,14 @@ def create_cred(request, id):
         with sqlite3.connect('db.sqlite3') as cnx:
             #cnx.row_factory = sqlite3.Row
             cur = cnx.cursor() 
-            cur.execute("SELECT * FROM worker,authPer,registerH on worker.id=authPer.authPer_id_id and worker.id=registerH.worker_id_id WHERE worker.id={0}".format(id))
-            ctx = cur.fetchmany(3)
+            #cur.execute("SELECT * FROM worker,authPer,registerH on worker.id=authPer.authPer_id_id and worker.id=registerH.worker_id_id WHERE worker.id={0}".format(id))
+            cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and worker.id={0}""".format(id))
+            ctx = cur.fetchall()
             cnx.commit()
-            nombre = 'Isaac'
-            print(ctx)
-            print(f'La longituf es: %s' + str(len(ctx)))
-            for i in ctx:
-                print(i[0])
-                print(i[1])
-                print(type(i))
+            nombre = ctx[0][28] + ' ' + ctx[0][29] + ' ' + ctx[0][30]
+            print(f'La longituf es: ' + str(len(ctx)))
+            image = qrcode.make(ctx)
+            image.save('qrimage.png')
             #create_qr(id)
             #qrImage = qrcode.make(i)
             #qrImage.save("qrcodeImage.png")
@@ -339,6 +337,7 @@ def create_cred(request, id):
             c.drawImage('/Users/k3nsh1n/Dev/restExample/static/cred.png', x=10, y=400, width=575, height=400)
             c.setFont('Helvetica', size=10)
             c.drawString(x=47, y=450, text=nombre)
+            c.drawImage('/Users/k3nsh1n/Dev/restExample/qrimage.png', x=450, y=510, width=100, height=100)
             c.showPage()
             c.save()
     except OSError as e:

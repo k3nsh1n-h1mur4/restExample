@@ -15,5 +15,6 @@ urlpatterns = [
     path('listadoh/', views.listadoH, name='listadoH'),
     path('save_edit/<int:id>/', views.save_edit, name='save_edit'),
     path('datos/<int:id>/', views.datos, name='datos'),
+    path('create_cred/<int:id>/', views.create_cred, name='create_cred'),
 
 ]
