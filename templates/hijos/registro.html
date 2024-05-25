@@ -28,6 +28,10 @@
             {{ form.edad }}
         </div> 
         <div class="fieldWrapper">
+            <label for="{{ form.edad.id_for_label }}">Tipo de Sangre:</label>
+            {{ form.t_sangre }}
+        </div> 
+        <div class="fieldWrapper">
             <label for="{{ form.alergias.id_for_label }}">Alergias:</label>
             {{ form.alergias }}
         </div>

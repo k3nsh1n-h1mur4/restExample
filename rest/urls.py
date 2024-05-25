@@ -16,5 +16,5 @@ urlpatterns = [
     path('save_edit/<int:id>/', views.save_edit, name='save_edit'),
     path('datos/<int:id>/', views.datos, name='datos'),
     path('create_cred/<int:id>/', views.create_cred, name='create_cred'),
-
+    path('create_sheet/<int:id>/', views.create_sheet, name='create_sheet'),
 ]

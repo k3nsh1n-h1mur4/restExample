@@ -27,3 +27,10 @@
     flex-direction: row;
     justify-content: space-around;
 }
+
+.btns-cont {
+    display:flex;
+    flex-flow: row;
+    align-content: center;
+    justify-content: space-around;
+}

@@ -1,8 +1,10 @@
 import sqlite3
+import json
 from sqlite3.dbapi2 import ProgrammingError
 from plyer import notification
 from datetime import datetime
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter, landscape
 from PIL import Image
 import qrcode
 
@@ -13,7 +15,7 @@ from .serializers import GroupSerializer, UserSerializer
 
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from rest.forms import workerForm, authPerForm, regHForm, workerUpdateForm, authPerUpdateForm, regHUpdateForm
 from rest.models import workerModel
 
@@ -48,6 +50,7 @@ def registro(request):
             edad = form.cleaned_data['edad'] 
             matricula = form.cleaned_data['matricula'] 
             adscripcion = form.cleaned_data['adscripcion'] 
+            horario = form.cleaned_data['horario']
             categoria = form.cleaned_data['categoria'] 
             n_afil = form.cleaned_data['n_afil'] 
             calle = form.cleaned_data['calle'] 
@@ -63,8 +66,8 @@ def registro(request):
             try:
                 with sqlite3.connect("db.sqlite3") as cnx:
                     cur = cnx.cursor()
-                    worker = cur.execute("INSERT INTO worker(app,apm,nombres,edad,matricula,adscripcion,categoria,n_afil,calle,num,colonia,cp,mcpio,tel_t,tel_p,tel_c,createdat, entRec)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", \
-                                (app.upper(),apm.upper(),nombres.upper(),edad,matricula,adscripcion.upper(),categoria.upper(),n_afil,calle.upper(),num,colonia.upper(),cp,mcpio.upper(),tel_t,tel_p,tel_c,entRec.upper(),createdat)) 
+                    worker = cur.execute("INSERT INTO worker(app,apm,nombres,edad,matricula,adscripcion,horario,categoria,n_afil,calle,num,colonia,cp,mcpio,tel_t,tel_p,tel_c,createdat, entRec)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", \
+                                (app.upper(),apm.upper(),nombres.upper(),edad,matricula,adscripcion.upper(),horario,categoria.upper(),n_afil,calle.upper(),num,colonia.upper(),cp,mcpio.upper(),tel_t,tel_p,tel_c,entRec.upper(),createdat)) 
                     cnx.commit()
                     nt = notification.notify(title='Registro', message="Registro Realizado con éxito", timeout=10)
                     return redirect('listado')
@@ -167,14 +170,15 @@ def regh(request, id):
             nombre = form.cleaned_data['nombre']
             f_nac = form.cleaned_data['f_nac']
             edad = form.cleaned_data['edad']
+            t_sangre = form.cleaned_data['t_sangre']
             alergias = form.cleaned_data['alergias']
             createdat = datetime.now()
             print(app,apm,nombre)
             try:
                 with sqlite3.connect('db.sqlite3') as cnx:
                     cur = cnx.cursor()
-                    cur.execute("INSERT INTO registerH(app,apm,nombre,f_nac,edad,alergias,createdat,worker_id_id)VALUES(?,?,?,?,?,?,?,?)", \
-                        (app.upper(),apm.upper(),nombre.upper(),f_nac,edad,alergias.upper(),createdat,id))
+                    cur.execute("INSERT INTO registerH(app,apm,nombre,f_nac,edad,t_sangre,alergias,createdat,worker_id_id)VALUES(?,?,?,?,?,?,?,?,?)", \
+                        (app.upper(),apm.upper(),nombre.upper(),f_nac,edad,t_sangre,alergias.upper(),createdat,id))
                     cnx.commit()
                     nt = notification.notify(title='Registro Hijo', message='Registro Realizado con éxito', timeout=10)
                     return redirect('listado')
@@ -228,6 +232,7 @@ def save_edit(request, id):
             edad = form.cleaned_data['edad'] 
             matricula = form.cleaned_data['matricula'] 
             adscripcion = form.cleaned_data['adscripcion'] 
+            horario = form.cleaned_data['horario']
             categoria = form.cleaned_data['categoria'] 
             n_afil = form.cleaned_data['n_afil'] 
             calle = form.cleaned_data['calle'] 
@@ -243,8 +248,8 @@ def save_edit(request, id):
             try:
                 with sqlite3.connect('db.sqlite3') as cnx:
                     cur = cnx.cursor()
-                    cur.execute("UPDATE worker SET app=?,apm=?,nombres=?,edad=?,matricula=?,adscripcion=?,categoria=?,n_afil=?,calle=?,num=?,colonia=?,\
-                                cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,entRec=?,createdat=? WHERE id=?", (app,apm,nombres,edad,matricula,adscripcion,categoria,n_afil,calle,num,\
+                    cur.execute("UPDATE worker SET app=?,apm=?,nombres=?,edad=?,matricula=?,adscripcion=?,horario=?,categoria=?,n_afil=?,calle=?,num=?,colonia=?,\
+                                cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,entRec=?,createdat=? WHERE id=?", (app,apm,nombres,edad,matricula,adscripcion,horario,categoria,n_afil,calle,num,\
                                 colonia,cp,mcpio,tel_t,tel_p,tel_c,entRec,createdat,id))
                 nt = notification.notify(title='Actualizacion', message='Datos actualizados', timeout=10)
                 return redirect('listado')
@@ -302,15 +307,17 @@ def datos(request, id):
         try:
             with sqlite3.connect('db.sqlite3') as cnx:
                 cur = cnx.cursor()
-                cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and worker.id={0}""".format(id))
+                cur.execute("select * from worker inner join authPer on worker.id=authPer.authPer_id_id inner join registerH on authPer.authPer_id_id=registerH.worker_id_id and worker.id={0}".format(id))
                 result = cur.fetchall()
                 print(result)
+                print(len(result))
                 cnx.commit()
-                for i in result:
-                    print(type(i))
         except sqlite3.ProgrammingError as e:
             print(e)
-    return render(request, 'worker/datos.html', {'ctx': i})
+    return JsonResponse(result, safe=False)
+    #response = HttpResponse(result, 'application/json')
+    #return response
+    #return render(request, 'worker/datos.html', {'ctx': result})
 
 def create_cred(request, id):
     id = id
@@ -334,15 +341,201 @@ def create_cred(request, id):
             #qrImage.save("qrcodeImage.png")
             #print(nombre)
             c = canvas.Canvas('credencialpdf.pdf')
-            c.drawImage('/Users/k3nsh1n/Dev/restExample/static/cred.png', x=10, y=400, width=575, height=400)
+            #c.drawImage('/Users/k3nsh1n/Dev/restExample/static/cred.png', x=10, y=400, width=575, height=400)
+            c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/cred.png', x=10, y=400, width=575, height=400)
             c.setFont('Helvetica', size=10)
             c.drawString(x=47, y=450, text=nombre)
-            c.drawImage('/Users/k3nsh1n/Dev/restExample/qrimage.png', x=450, y=510, width=100, height=100)
+            #c.drawImage('/Users/k3nsh1n/Dev/restExample/qrimage.png', x=450, y=510, width=100, height=100)
+            c.drawImage('C:/Users/jazyi/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
             c.showPage()
             c.save()
     except OSError as e:
-        raise e
+        print(e)
     response = HttpResponse('Credencial Generada', 'application/json')
     return response
 
+
+def create_sheet(request, id):
+    id = id
+    title = 'Crear hoja de Registro'
+    if request.method == 'GET':
+        try:
+            with sqlite3.connect('db.sqlite3') as cnx:
+                cur = cnx.cursor()
+                cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and worker.id={0}""".format(id))
+                ctx = cur.fetchall()
+                cnx.commit()
+                print(len(ctx))
+                c = canvas.Canvas('hojaRegistro.pdf')
+                c.setPageSize(landscape(letter))
+                c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/PORTADA.jpg', x=5, y=0, width=770, height=620)
+                c.setFont('Helvetica', size=8)
+                if len(ctx) == 1:
+                #Una per aut--> 1 hijo
+                    c.drawString(x=80, y=495, text=ctx[0][1])
+                    c.drawString(x=180, y=495, text=ctx[0][2])
+                    c.drawString(x=310, y=495, text=ctx[0][3])
+                    c.drawString(x=520, y=495, text=ctx[0][4])
+                    c.drawString(x=110, y=465, text=ctx[0][5])
+                    c.drawString(x=287, y=465, text=ctx[0][6])
+                    c.drawString(x=445, y=465, text=ctx[0][18])
+                    c.drawString(x=88, y=435, text=ctx[0][7])
+                    c.drawString(x=400, y=435, text=ctx[0][8])
+
+                    c.drawString(x=120, y=405, text=ctx[0][9])
+                    c.drawString(x=260, y=405, text=ctx[0][10])
+                    c.drawString(x=320, y=405, text=ctx[0][11])
+                    c.drawString(x=470, y=405, text=ctx[0][12])
+
+                    c.drawString(x=50, y=380, text=ctx[0][13])
+                    c.drawString(x=200, y=380, text=ctx[0][14])
+                    c.drawString(x=350, y=380, text=ctx[0][15])
+                    c.drawString(x=470, y=380, text=ctx[0][16])
+
+                    c.drawString(x=200, y=355, text=ctx[0][17])
+
+                    per1 = ctx[0][21] + '  ' + ctx[0][22] + '  ' + ctx[0][23]
+                    c.drawString(x=45, y=285, text=per1)
+                    c.drawString(x=380, y=285, text=ctx[0][24])
+                    c.drawString(x=480, y=285, text=ctx[0][25])
+
+                    h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
+                    c.drawString(x=45, y=203, text=h1)
+                    c.drawString(x=400, y=203, text=str(ctx[0][33]))
+                    c.drawString(x=500, y=203, text=ctx[0][32])
+                    c.drawString(x=600, y=203, text=ctx[0][37])
+                    c.drawString(x=645, y=203, text=ctx[0][34])
+
+                
+                elif len(ctx) == 2:
+                    c.drawString(x=80, y=495, text=ctx[0][1])
+                    c.drawString(x=180, y=495, text=ctx[0][2])
+                    c.drawString(x=310, y=495, text=ctx[0][3])
+                    c.drawString(x=520, y=495, text=ctx[0][4])
+                    c.drawString(x=110, y=465, text=ctx[0][5])
+                    c.drawString(x=287, y=465, text=ctx[0][6])
+                    c.drawString(x=445, y=465, text=ctx[0][18])
+                    c.drawString(x=88, y=435, text=ctx[0][7])
+                    c.drawString(x=400, y=435, text=ctx[0][8])
+
+                    c.drawString(x=120, y=405, text=ctx[0][9])
+                    c.drawString(x=260, y=405, text=ctx[0][10])
+                    c.drawString(x=320, y=405, text=ctx[0][11])
+                    c.drawString(x=470, y=405, text=ctx[0][12])
+
+                    c.drawString(x=50, y=380, text=ctx[0][13])
+                    c.drawString(x=200, y=380, text=ctx[0][14])
+                    c.drawString(x=350, y=380, text=ctx[0][15])
+                    c.drawString(x=470, y=380, text=ctx[0][16])
+
+                    c.drawString(x=200, y=355, text=ctx[0][17])
+
+                    per1 = ctx[0][21] + '  ' + ctx[0][22] + '  ' + ctx[0][23]
+                    c.drawString(x=45, y=285, text=per1)
+                    c.drawString(x=380, y=285, text=ctx[0][24])
+                    c.drawString(x=480, y=285, text=ctx[0][25])
+                    
+                    per2 = ctx[1][21] + '  ' + ctx[1][22] + '  ' + ctx[1][23]
+                    c.drawString(x=45, y=270, text=per2)
+                    c.drawString(x=380, y=270, text=ctx[1][24])
+                    c.drawString(x=480, y=270, text=ctx[1][25])
+                    
+                    h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
+                    c.drawString(x=45, y=203, text=h1)
+                    c.drawString(x=400, y=203, text=str(ctx[0][33]))
+                    c.drawString(x=500, y=203, text=ctx[0][32])
+                    c.drawString(x=600, y=203, text=ctx[0][37])
+                    c.drawString(x=645, y=203, text=ctx[0][34])
+                    
+                    h2 = ctx[1][29] + '  ' + ctx[1][30] + '  ' + ctx[1][31]
+                    c.drawString(x=45, y=188, text=h2)
+                    c.drawString(x=400, y=188, text=str(ctx[1][33]))
+                    c.drawString(x=500, y=188, text=ctx[1][32])
+                    c.drawString(x=600, y=188, text=ctx[1][37])
+                    c.drawString(x=645, y=188, text=ctx[1][34])
+                elif len(ctx) == 3:
+                    c.drawString(x=80, y=495, text=ctx[0][1])
+                    c.drawString(x=180, y=495, text=ctx[0][2])
+                    c.drawString(x=310, y=495, text=ctx[0][3])
+                    c.drawString(x=520, y=495, text=ctx[0][4])
+                    c.drawString(x=110, y=465, text=ctx[0][5])
+                    c.drawString(x=287, y=465, text=ctx[0][6])
+                    c.drawString(x=445, y=465, text=ctx[0][18])
+                    c.drawString(x=88, y=435, text=ctx[0][7])
+                    c.drawString(x=400, y=435, text=ctx[0][8])
+                    c.drawString(x=120, y=405, text=ctx[0][9])
+                    c.drawString(x=260, y=405, text=ctx[0][10])
+                    c.drawString(x=320, y=405, text=ctx[0][11])
+                    c.drawString(x=470, y=405, text=ctx[0][12])
+                    c.drawString(x=50, y=380, text=ctx[0][13])
+                    c.drawString(x=200, y=380, text=ctx[0][14])
+                    c.drawString(x=350, y=380, text=ctx[0][15])
+                    c.drawString(x=470, y=380, text=ctx[0][16])
+                    c.drawString(x=200, y=355, text=ctx[0][17])
+
+                    per1 = ctx[0][21] + '  ' + ctx[0][22] + '  ' +ctx[0][23]
+                    c.drawString(x=45, y=285, text=per1)
+                    c.drawString(x=380, y=285, text=ctx[0][24])
+                    c.drawString(x=480, y=285, text=ctx[0][25])
+
+                    h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
+                    c.drawString(x=45, y=203, text=h1)
+                    c.drawString(x=400, y=203, text=str(ctx[0][3]))
+                    c.drawString(x=500, y=203, text=ctx[0][32])
+                    c.drawString(x=600, y=203, text=ctx[0][37])
+                    c.drawString(x=645, y=203, text=ctx[0][34])
+                    
+                    h2 = ctx[1][29] + '  ' + ctx[1][30] + '  ' + ctx[1][31]
+                    c.drawString(x=45, y=186, text=h1)
+                    c.drawString(x=400, y=186, text=str(ctx[1][3]))
+                    c.drawString(x=500, y=186, text=ctx[1][32])
+                    c.drawString(x=600, y=186, text=ctx[1][37])
+                    c.drawString(x=645, y=186, text=ctx[1][34]) 
+                    
+                    h3 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
+                    c.drawString(x=45, y=169, text=h1)
+                    c.drawString(x=400, y=169, text=str(ctx[2][3]))
+                    c.drawString(x=500, y=169, text=ctx[2][32])
+                    c.drawString(x=600, y=169, text=ctx[2][37])
+                    c.drawString(x=645, y=169, text=ctx[2][34])
+                elif len(ctx) == 4:
+                    pass
+
+
+                #
+                
+                """per2 = ctx[1][20] + '  ' + ctx[1][21] + '  ' + ctx[1][22]
+                c.drawString(x=45, y=270, text=per2)
+                c.drawString(x=380, y=270, text=ctx[1][23])
+                c.drawString(x=480, y=270, text=ctx[1][24])
+
+                h1 = ctx[0][28] + '  ' + ctx[0][29] + '  ' + ctx[0][30]
+                c.drawString(x=45, y=200, text=h1)
+                #c.drawString(x=380, y=200, text=ctx[0][31])
+                c.drawString(x=380, y=200, text=str(ctx[0][32]))
+                c.drawString(x=450, y=200, text=ctx[0][33])
+                c.drawString(x=500, y=200, text=ctx[0][34])
+                print(h1)
+
+                h2 = ctx[1][28] + '  ' + ctx[1][29] + '  ' + ctx[1][30]
+                #c.drawString(x=, y=, text=)
+                #c.drawString(x=, y=, text=)
+                #c.drawString(x=, y=, text=)
+                print(h2)
+                
+                #h3 = ctx[2][28] + '  ' + ctx[2][29] + '  ' + ctx[2][30]
+                #c.drawString(x=, y=, text=)
+                #c.drawString(x=, y=, text=)
+                #c.drawString(x=, y=, text=)
+                #print(h3)"""
+
+                
+                c.showPage()
+                c.save()
+        except sqlite3.Error as e:
+            print(e)
+    response = HttpResponse()
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename="port.pdf"'
+    return response
 

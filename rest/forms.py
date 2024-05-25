@@ -27,12 +27,20 @@ class workerForm(forms.Form):
         ("SUB-DEL JUAREZ","SUB-DEL JUAREZ"),
         ("SNTSS","SNTSS"),
     ]
+
+    HORARIO = [
+        ("MATUTINO", "MATUTINO"),
+        ("VESPERTINO", "VESPERTINO"),
+        ("NOCTURNO", "NOCTURNO"),
+        ("JORNADA ACUMU8LADA", "JORNADA ACUMULADA"),
+    ]
     app = forms.CharField(label='Apellido Paterno', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     apm = forms.CharField(label='Apellido Materno', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     nombres = forms.CharField(label='Nombres', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     edad = forms.CharField(label='Edad', max_length=5, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     matricula = forms.CharField(label='Matrícula', max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     adscripcion = forms.CharField(label='Adscripción', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    horario = forms.ChoiceField(label='Horario', widget=forms.Select(attrs={'class': 'form-control'}), required=False, choices=HORARIO,)
     categoria = forms.CharField(label='Categoría', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     n_afil = forms.CharField(label='# Afiliación', max_length=11, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     calle = forms.CharField(label='Calle', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
@@ -61,6 +69,7 @@ class regHForm(forms.Form):
     nombre = forms.CharField(label='Nombre(s)', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     f_nac = forms.DateField(label='Fecha de Nacimiento', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'AAAA-M-D'}), required=False)
     edad = forms.FloatField(label='Edad', widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    t_sangre = forms.CharField(label='Tipo de Sangre', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     alergias = forms.CharField(label='Alergias', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
 
     
@@ -91,12 +100,19 @@ class workerUpdateForm(forms.Form):
         ("SUB-DEL JUAREZ","SUB-DEL JUAREZ"),
         ("SNTSS","SNTSS"),
     ]
+    HORARIO = [
+        ("MATUTINO", "MATUTINO"),
+        ("VESPERTINO", "VESPERTINO"),
+        ("NOCTURNO", "NOCTURNO"),
+        ("JORNADA ACUMU8LADA", "JORNADA ACUMULADA"),
+    ]
     app = forms.CharField(label='Apellido Paterno', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     apm = forms.CharField(label='Apellido Materno', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     nombres = forms.CharField(label='Nombres', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     edad = forms.CharField(label='Edad', max_length=5, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     matricula = forms.CharField(label='Matrícula', max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     adscripcion = forms.CharField(label='Adscripción', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    horario = forms.ChoiceField(label='Horario', widget=forms.Select(attrs={'class': 'form-control'}), required=False, choices=HORARIO,)
     categoria = forms.CharField(label='Categoría', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     n_afil = forms.CharField(label='# Afiliación', max_length=11, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     calle = forms.CharField(label='Calle', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
@@ -125,6 +141,7 @@ class regHUpdateForm(forms.Form):
     nombre = forms.CharField(label='Nombre(s)', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     f_nac = forms.DateField(label='Fecha de Nacimiento', widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'AAAA-M-D'}), required=False)
     edad = forms.FloatField(label='Edad', widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    t_sangre = forms.CharField(label='Tipo de Sangre', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     alergias = forms.CharField(label='Alergias', max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
 
 
