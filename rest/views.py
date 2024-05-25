@@ -453,6 +453,7 @@ def create_sheet(request, id):
                     c.drawString(x=500, y=188, text=ctx[1][32])
                     c.drawString(x=600, y=188, text=ctx[1][37])
                     c.drawString(x=645, y=188, text=ctx[1][34])
+
                 elif len(ctx) == 3:
                     c.drawString(x=80, y=495, text=ctx[0][1])
                     c.drawString(x=180, y=495, text=ctx[0][2])
@@ -499,8 +500,68 @@ def create_sheet(request, id):
                     c.drawString(x=500, y=169, text=ctx[2][32])
                     c.drawString(x=600, y=169, text=ctx[2][37])
                     c.drawString(x=645, y=169, text=ctx[2][34])
+                
                 elif len(ctx) == 4:
-                    pass
+                    print(ctx)
+                    c.drawString(x=80, y=495, text=ctx[0][1])
+                    c.drawString(x=180, y=495, text=ctx[0][2])
+                    c.drawString(x=310, y=495, text=ctx[0][3])
+                    c.drawString(x=520, y=495, text=ctx[0][4])
+                    c.drawString(x=110, y=465, text=ctx[0][5])
+                    c.drawString(x=287, y=465, text=ctx[0][6])
+                    c.drawString(x=445, y=465, text=ctx[0][18])
+                    c.drawString(x=88, y=435, text=ctx[0][7])
+                    c.drawString(x=400, y=435, text=ctx[0][8])
+                    c.drawString(x=120, y=405, text=ctx[0][9])
+                    c.drawString(x=260, y=405, text=ctx[0][10])
+                    c.drawString(x=320, y=405, text=ctx[0][11])
+                    c.drawString(x=470, y=405, text=ctx[0][12])
+                    c.drawString(x=50, y=380, text=ctx[0][13])
+                    c.drawString(x=200, y=380, text=ctx[0][14])
+                    c.drawString(x=350, y=380, text=ctx[0][15])
+                    c.drawString(x=470, y=380, text=ctx[0][16])
+                    
+                    c.drawString(x=200, y=355, text=ctx[0][19])
+
+                    per1 = ctx[0][21] + '  ' + ctx[0][22] + '  ' +ctx[0][23]
+                    c.drawString(x=45, y=285, text=per1)
+                    c.drawString(x=380, y=285, text=ctx[0][24])
+                    c.drawString(x=480, y=285, text=ctx[0][25])
+                    
+                    per2 = ctx[1][21] + '  ' + ctx[1][22] + '  ' +ctx[1][23]
+                    c.drawString(x=45, y=270, text=per2)
+                    c.drawString(x=380, y=270, text=ctx[1][24])
+                    c.drawString(x=480, y=270, text=ctx[1][25])
+
+                    h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
+                    c.drawString(x=45, y=203, text=h1)
+                    c.drawString(x=400, y=203, text=str(ctx[0][3]))
+                    c.drawString(x=500, y=203, text=ctx[0][32])
+                    c.drawString(x=600, y=203, text=ctx[0][37])
+                    c.drawString(x=645, y=203, text=ctx[0][34])
+                    
+                    h2 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
+                    c.drawString(x=45, y=186, text=h2)
+                    c.drawString(x=400, y=186, text=str(ctx[2][3]))
+                    c.drawString(x=500, y=186, text=ctx[2][32])
+                    c.drawString(x=600, y=186, text=ctx[2][37])
+                    c.drawString(x=645, y=186, text=ctx[2][34]) 
+                    
+                    """
+                    h3 = ctx[3][29] + '  ' + ctx[3][30] + '  ' + ctx[3][31]
+                    c.drawString(x=45, y=169, text=h3)
+                    c.drawString(x=400, y=169, text=str(ctx[3][3]))
+                    c.drawString(x=500, y=169, text=ctx[3][32])
+                    c.drawString(x=600, y=169, text=ctx[3][37])
+                    c.drawString(x=645, y=169, text=ctx[3][34])
+                    
+                    h4 = ctx[3][29] + '  ' + ctx[3][30] + '  ' + ctx[3][31]
+                    c.drawString(x=45, y=151, text=h4)
+                    c.drawString(x=400, y=151, text=str(ctx[3][3]))
+                    c.drawString(x=500, y=151, text=ctx[3][32])
+                    c.drawString(x=600, y=151, text=ctx[3][37])
+                    c.drawString(x=645, y=151, text=ctx[3][34])
+                    """
                 
                 elif len(ctx) == 6:
                     # 1 worker --> 2 authPer --> 3 registerH
