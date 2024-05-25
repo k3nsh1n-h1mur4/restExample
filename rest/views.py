@@ -332,7 +332,7 @@ def create_cred(request, id):
             cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and worker.id={0}""".format(id))
             ctx = cur.fetchall()
             cnx.commit()
-            nombre = ctx[0][28] + ' ' + ctx[0][29] + ' ' + ctx[0][30]
+            nombre = ctx[0][29] + ' ' + ctx[0][30] + ' ' + ctx[0][31]
             print(f'La longituf es: ' + str(len(ctx)))
             image = qrcode.make(ctx)
             image.save('qrimage.png')
