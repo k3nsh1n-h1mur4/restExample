@@ -1,3 +1,8 @@
+body {
+    background-color: rgb(224, 224, 224);
+    color: black;
+}
+
 .main-cont {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -33,4 +38,49 @@
     flex-flow: row;
     align-content: center;
     justify-content: space-around;
+}
+
+main {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.registro {
+    display: flex;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+header {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    align-content: space-between;
+    
+}
+
+.image img {
+    width: 200px;
+    height: 200px;
+}
+
+
+.txt {
+    font-size: 25px;
+    text-align: center;
 }

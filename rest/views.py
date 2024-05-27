@@ -37,6 +37,11 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    
+def index(request):
+    title = 'Plan Vacacional 2024'
+    return render(request, 'index.html', {'title': title})
+
 
 def registro(request):
     title = " Registro"
@@ -300,6 +305,47 @@ def save_edit_p(request, id):
     return render(request, 'authPer/editPer.html', {'title': title})
 
 
+def edit_h(request, id):
+    id = id
+    title = 'Editar Datos Hijo(a)'
+    form = regHUpdateForm()
+    if request.method == 'GET':
+        try:
+            with sqlite3.connect('db.sqlite3') as cnx:
+                cur = cnx.cursor()
+                cur.execute("SELECT * FROM registerH WHERE id={0}".format(id))
+                ctx = cur.fetchone()
+                cnx.commit()
+        except sqlite3.Error as e:
+            print(e)
+    return render(request, 'hijos/editar.html', {'title': title, 'ctx': ctx})
+                    
+            
+def save_edit_h(request, id):
+    id = id
+    title = 'Editar Datos de Hijo(a)'
+    if request.method == 'POST':
+        form = regHUpdateForm(request.POST)
+        if form.is_valid():
+            app = form.cleaned_data['app']
+            apm = form.cleaned_data['apm']
+            nombre = form.cleaned_data['nombre']
+            f_nac = form.cleaned_data['f_nac']
+            edad = form.cleaned_data['edad']
+            t_sangre = form.cleaned_data['t_sangre']
+            alergias = form.cleaned_data['alergias']
+            try:
+                with sqlite3.connect('db.sqlite3') as cnx:
+                    cur = cnx.cursor()
+                    cur.execute("UPDATE registerH SET app=?, apm=?, nombre=?, f_nac=?, edad=?, t_sangre=?, alergias=? WHERE id=?", (app.upper(),apm.upper(),nombre.upper(),f_nac,edad,t_sangre.upper(),alergias.upper(),id))
+                    cnx.commit()
+                nt = notification.notify(title='Actualizar hijos', message='Datos Actualizados', timeout=10)
+                return redirect('listadoH')
+            except sqlite3.Error as e:
+                print(e) 
+    return render(request, 'hijos/editar.html', {'title': title})
+
+
 def datos(request, id):
     id = id
     title = 'Mostrar Datos'
@@ -340,13 +386,14 @@ def create_cred(request, id):
             #qrImage = qrcode.make(i)
             #qrImage.save("qrcodeImage.png")
             #print(nombre)
-            c = canvas.Canvas('credencialpdf.pdf')
-            #c.drawImage('/Users/k3nsh1n/Dev/restExample/static/cred.png', x=10, y=400, width=575, height=400)
-            c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/cred.png', x=10, y=400, width=575, height=400)
+            cred_name = 'credencial' + nombre + '.pdf'
+            c = canvas.Canvas(cred_name)
+            c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/cred.png', x=10, y=400, width=575, height=400)
+            #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/cred.png', x=10, y=400, width=575, height=400)
             c.setFont('Helvetica', size=10)
             c.drawString(x=47, y=450, text=nombre)
-            #c.drawImage('/Users/k3nsh1n/Dev/restExample/qrimage.png', x=450, y=510, width=100, height=100)
-            c.drawImage('C:/Users/jazyi/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
+            c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
+            #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
             c.showPage()
             c.save()
     except OSError as e:
@@ -366,9 +413,14 @@ def create_sheet(request, id):
                 ctx = cur.fetchall()
                 cnx.commit()
                 print(len(ctx))
-                c = canvas.Canvas('hojaRegistro.pdf')
+                name = ctx[0][1] + ctx[0][2] + ctx[0][3]
+                name_reg = 'hojaRegistro' + name + '.pdf'
+                c = canvas.Canvas(name_reg)
                 c.setPageSize(landscape(letter))
-                c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/PORTADA.jpg', x=5, y=0, width=770, height=620)
+                c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
+                #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/PORTADA.jpg', x=5, y=0, width=770, height=620)
+                c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/PORTADA.jpg', x=5, y=0, width=770, height=620)
+                #c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/CONTRAPORTADA.jpg', x=5, y=0, width=770, height=620)
                 c.setFont('Helvetica', size=8)
                 if len(ctx) == 1:
                 #Una per aut--> 1 hijo
@@ -675,34 +727,10 @@ def create_sheet(request, id):
                     c.drawString(x=500, y=151, text=ctx[6][32])
                     c.drawString(x=600, y=151, text=ctx[6][37])
                     c.drawString(x=645, y=151, text=ctx[6][34])
-                #
                 
-                """per2 = ctx[1][20] + '  ' + ctx[1][21] + '  ' + ctx[1][22]
-                c.drawString(x=45, y=270, text=per2)
-                c.drawString(x=380, y=270, text=ctx[1][23])
-                c.drawString(x=480, y=270, text=ctx[1][24])
-
-                h1 = ctx[0][28] + '  ' + ctx[0][29] + '  ' + ctx[0][30]
-                c.drawString(x=45, y=200, text=h1)
-                #c.drawString(x=380, y=200, text=ctx[0][31])
-                c.drawString(x=380, y=200, text=str(ctx[0][32]))
-                c.drawString(x=450, y=200, text=ctx[0][33])
-                c.drawString(x=500, y=200, text=ctx[0][34])
-                print(h1)
-
-                h2 = ctx[1][28] + '  ' + ctx[1][29] + '  ' + ctx[1][30]
-                #c.drawString(x=, y=, text=)
-                #c.drawString(x=, y=, text=)
-                #c.drawString(x=, y=, text=)
-                print(h2)
+                c.showPage()
                 
-                #h3 = ctx[2][28] + '  ' + ctx[2][29] + '  ' + ctx[2][30]
-                #c.drawString(x=, y=, text=)
-                #c.drawString(x=, y=, text=)
-                #c.drawString(x=, y=, text=)
-                #print(h3)"""
-
-                
+                c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/CONTRAPORTADA.jpg', x=5, y=0, width=770, height=620)
                 c.showPage()
                 c.save()
         except sqlite3.Error as e:
