@@ -1,3 +1,6 @@
+import io
+import os
+import glob
 import sqlite3
 import json
 from sqlite3.dbapi2 import ProgrammingError
@@ -488,15 +491,15 @@ def create_sheet(request, id):
                     c.drawString(x=645, y=203, text=ctx[0][34])
                     
                     h2 = ctx[1][29] + '  ' + ctx[1][30] + '  ' + ctx[1][31]
-                    c.drawString(x=45, y=186, text=h1)
-                    c.drawString(x=400, y=186, text=str(ctx[1][3]))
+                    c.drawString(x=45, y=186, text=h2)
+                    c.drawString(x=400, y=186, text=str(ctx[1][33]))
                     c.drawString(x=500, y=186, text=ctx[1][32])
                     c.drawString(x=600, y=186, text=ctx[1][37])
                     c.drawString(x=645, y=186, text=ctx[1][34]) 
                     
                     h3 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
-                    c.drawString(x=45, y=169, text=h1)
-                    c.drawString(x=400, y=169, text=str(ctx[2][3]))
+                    c.drawString(x=45, y=169, text=h3)
+                    c.drawString(x=400, y=169, text=str(ctx[2][33]))
                     c.drawString(x=500, y=169, text=ctx[2][32])
                     c.drawString(x=600, y=169, text=ctx[2][37])
                     c.drawString(x=645, y=169, text=ctx[2][34])
@@ -535,14 +538,14 @@ def create_sheet(request, id):
 
                     h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
                     c.drawString(x=45, y=203, text=h1)
-                    c.drawString(x=400, y=203, text=str(ctx[0][3]))
+                    c.drawString(x=400, y=203, text=str(ctx[0][33]))
                     c.drawString(x=500, y=203, text=ctx[0][32])
                     c.drawString(x=600, y=203, text=ctx[0][37])
                     c.drawString(x=645, y=203, text=ctx[0][34])
                     
                     h2 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
                     c.drawString(x=45, y=186, text=h2)
-                    c.drawString(x=400, y=186, text=str(ctx[2][3]))
+                    c.drawString(x=400, y=186, text=str(ctx[2][33]))
                     c.drawString(x=500, y=186, text=ctx[2][32])
                     c.drawString(x=600, y=186, text=ctx[2][37])
                     c.drawString(x=645, y=186, text=ctx[2][34]) 
@@ -597,21 +600,21 @@ def create_sheet(request, id):
 
                     h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
                     c.drawString(x=45, y=203, text=h1)
-                    c.drawString(x=400, y=203, text=str(ctx[0][3]))
+                    c.drawString(x=400, y=203, text=str(ctx[0][33]))
                     c.drawString(x=500, y=203, text=ctx[0][32])
                     c.drawString(x=600, y=203, text=ctx[0][37])
                     c.drawString(x=645, y=203, text=ctx[0][34])
                     
                     h2 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
                     c.drawString(x=45, y=186, text=h2)
-                    c.drawString(x=400, y=186, text=str(ctx[2][3]))
+                    c.drawString(x=400, y=186, text=str(ctx[2][33]))
                     c.drawString(x=500, y=186, text=ctx[2][32])
                     c.drawString(x=600, y=186, text=ctx[2][37])
                     c.drawString(x=645, y=186, text=ctx[2][34]) 
                     
                     h3 = ctx[4][29] + '  ' + ctx[4][30] + '  ' + ctx[4][31]
                     c.drawString(x=45, y=169, text=h3)
-                    c.drawString(x=400, y=169, text=str(ctx[5][3]))
+                    c.drawString(x=400, y=169, text=str(ctx[5][33]))
                     c.drawString(x=500, y=169, text=ctx[5][32])
                     c.drawString(x=600, y=169, text=ctx[5][37])
                     c.drawString(x=645, y=169, text=ctx[5][34])
@@ -650,28 +653,28 @@ def create_sheet(request, id):
 
                     h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
                     c.drawString(x=45, y=203, text=h1)
-                    c.drawString(x=400, y=203, text=str(ctx[0][3]))
+                    c.drawString(x=400, y=203, text=str(ctx[0][33]))
                     c.drawString(x=500, y=203, text=ctx[0][32])
                     c.drawString(x=600, y=203, text=ctx[0][37])
                     c.drawString(x=645, y=203, text=ctx[0][34])
                     
                     h2 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
                     c.drawString(x=45, y=186, text=h2)
-                    c.drawString(x=400, y=186, text=str(ctx[2][3]))
+                    c.drawString(x=400, y=186, text=str(ctx[2][33]))
                     c.drawString(x=500, y=186, text=ctx[2][32])
                     c.drawString(x=600, y=186, text=ctx[2][37])
                     c.drawString(x=645, y=186, text=ctx[2][34]) 
                     
                     h3 = ctx[4][29] + '  ' + ctx[4][30] + '  ' + ctx[4][31]
                     c.drawString(x=45, y=169, text=h3)
-                    c.drawString(x=400, y=169, text=str(ctx[5][3]))
+                    c.drawString(x=400, y=169, text=str(ctx[5][33]))
                     c.drawString(x=500, y=169, text=ctx[5][32])
                     c.drawString(x=600, y=169, text=ctx[5][37])
                     c.drawString(x=645, y=169, text=ctx[5][34])
                     
                     h4 = ctx[6][29] + '  ' + ctx[6][30] + '  ' + ctx[6][31]
                     c.drawString(x=45, y=151, text=h4)
-                    c.drawString(x=400, y=151, text=str(ctx[6][3]))
+                    c.drawString(x=400, y=151, text=str(ctx[6][33]))
                     c.drawString(x=500, y=151, text=ctx[6][32])
                     c.drawString(x=600, y=151, text=ctx[6][37])
                     c.drawString(x=645, y=151, text=ctx[6][34])
@@ -701,13 +704,17 @@ def create_sheet(request, id):
                 #c.drawString(x=, y=, text=)
                 #c.drawString(x=, y=, text=)
                 #print(h3)"""
-
                 
+                c.showPage()
+                c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/CONTRAPORTADA.jpg')
                 c.showPage()
                 c.save()
         except sqlite3.Error as e:
             print(e)
-    response = HttpResponse()
+    latest_file = glob.glob('C:/Users/jazyi/Dev/planv/restExample/hojaRegistro*.pdf')
+    last = max(latest_file, key=os.path.getctime)
+    file =open(last, 'rb')
+    response = HttpResponse(file)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename="port.pdf"'
     return response
