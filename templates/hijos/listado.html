@@ -17,6 +17,7 @@
                             <th scope="col">Nombres</th>
                             <th scope="col">Fecha de Nacimiento:</th>
                             <th scope="col">Edad</th>
+                            <th scope="col">Tipo Sangre</th>
                             <th scope="col">Alergias</th>
                         </tr>
                     </thead>
@@ -29,9 +30,10 @@
                             <td>{{ ctx.3 }}</td>
                             <td>{{ ctx.4 }}</td>
                             <td>{{ ctx.5 }}</td>
+                            <td>{{ ctx.9 }}</td>
                             <td>{{ ctx.6 }}</td>
                             <td>
-                                <a href="#" class="btn btn-secondary">Ver Datos</a>
+                                <a href="{% url 'edit_h' ctx.0 %}" class="btn btn-secondary">Editar Datos</a>
                                 <a href="{% url 'create_cred' ctx.0 %}" class="btn btn-warning">Crear Credencial</a>
                             </td>
                         </tr>

@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <title>Plan Vacacional 2024</title>
+</head>
+<body>
+    
+    <main>
+        <img src="{% static 'sntss-logo.png' %}" alt="sntss-logo" srcset="">
+    </main>
+    <div class="title">
+        <p>SINDICATO NACIONAL DE TRABAJADORES DEL SEGURO SOCIAL SECCIÓN III<br>
+        JALISCO<br>
+        PLAN VACACIONAL 2024</p>
+    </div>
+
+    <div class="registro">
+        <a href="{% url 'registro' %}" class="btn btn-primary">Comenzar a registrar</a>
+    </div>
+</body>
+</html>
