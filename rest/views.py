@@ -1,3 +1,5 @@
+import openpyxl
+import pandas as pd
 import io
 import os
 import glob
@@ -731,10 +733,7 @@ def create_sheet(request, id):
                     c.drawString(x=600, y=151, text=ctx[6][37])
                     c.drawString(x=645, y=151, text=ctx[6][34])
                 
-<<<<<<< HEAD
-=======
                     c.showPage()
->>>>>>> b263e154083f4f244f05c9cb13bdd5b2051dba4e
                 
                     c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/CONTRAPORTADA.jpg', x=5, y=0, width=770, height=620)
                     c.showPage()
@@ -751,3 +750,28 @@ def create_sheet(request, id):
     response.headers['Content-Disposition'] = 'attachment; filename="port.pdf"'
     return response
 
+
+
+def create_excel(ctx):
+    df = pd.DataFrame(ctx)
+    df.to_excel('exportDB.xlsx', sheet_name='totales')
+
+
+def export_toExcel(request):
+    title = 'Export Excel'
+    try:
+        with sqlite3.connect('db.sqlite3') as cnx:
+            cur = cnx.cursor()
+            cur.execute("SELECT * FROM worker, authPer, registerH WHERE worker.id=authPer.authPer_id_id AND worker.id=registerH.worker_id_id")
+            ctx = cur.fetchall()
+            cnx.commit()
+            create_excel(ctx)
+    except sqlite3.Error as e:
+        print(e)
+    latest_file = glob.glob('C:/Users/jazyi/Dev/planv/restExample/*.xlsx')
+    last = max(latest_file, key=os.path.getctime)
+    file =open(last, 'rb')
+    response = HttpResponse(file)
+    response.headers['Content-Type'] = 'application/vnd.ms-excel'
+    response.headers['Content-Disposition'] = 'attachment; filename="resume.xlsx"'
+    return response
