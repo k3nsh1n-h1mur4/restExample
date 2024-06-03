@@ -74,7 +74,7 @@ def registro(request):
             createdat = datetime.now()
             entRec = form.cleaned_data['entRec']
             try:
-                with sqlite3.connect("db.sqlite3") as cnx:
+                with sqlite3.connect("") as cnx:
                     cur = cnx.cursor()
                     worker = cur.execute("INSERT INTO worker(app,apm,nombres,edad,matricula,adscripcion,horario,categoria,n_afil,calle,num,colonia,cp,mcpio,tel_t,tel_p,tel_c,createdat, entRec)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", \
                                 (app.upper(),apm.upper(),nombres.upper(),edad,matricula,adscripcion.upper(),horario,categoria.upper(),n_afil,calle.upper(),num,colonia.upper(),cp,mcpio.upper(),tel_t,tel_p,tel_c,entRec.upper(),createdat)) 
@@ -95,7 +95,7 @@ def listado(request):
     title = 'Listado General'
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM worker")
                 ctx = cur.fetchall()
@@ -112,7 +112,7 @@ def delete(request, id):
     if request.method == 'POST':
         print(request.method)
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("DELETE FROM worker WHERE id=?",(id))
                 cnx.commit()
@@ -142,7 +142,7 @@ def regauthper(request, id):
             tel = form.cleaned_data['tel']
             createdat = datetime.now()
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("INSERT INTO authPer(app,apm,nombre,parentesco,tel,createdat,authPer_id_id)VALUES(?,?,?,?,?,?,?)", (app.upper(),apm.upper(),nombre.upper(),parentesco.upper(),tel,createdat,id))
                     cnx.commit()
@@ -158,7 +158,7 @@ def listadoP(request):
     if request.method == 'GET':
         ctx = None
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute('SELECT * FROM authPer')
                 ctx = cur.fetchall()
@@ -185,7 +185,7 @@ def regh(request, id):
             createdat = datetime.now()
             print(app,apm,nombre)
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("INSERT INTO registerH(app,apm,nombre,f_nac,edad,t_sangre,alergias,createdat,worker_id_id)VALUES(?,?,?,?,?,?,?,?,?)", \
                         (app.upper(),apm.upper(),nombre.upper(),f_nac,edad,t_sangre,alergias.upper(),createdat,id))
@@ -202,7 +202,7 @@ def listadoH(request):
     ctx = None
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM registerH")
                 ctx = cur.fetchall()
@@ -220,7 +220,7 @@ def editar(request, id):
     form = workerUpdateForm()
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM worker WHERE id={0}".format(id))
                 ctx = cur.fetchone()
@@ -256,7 +256,7 @@ def save_edit(request, id):
             entRec = form.cleaned_data['entRec']
             createdat = datetime.now()
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("UPDATE worker SET app=?,apm=?,nombres=?,edad=?,matricula=?,adscripcion=?,horario=?,categoria=?,n_afil=?,calle=?,num=?,colonia=?,\
                                 cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,entRec=?,createdat=? WHERE id=?", (app,apm,nombres,edad,matricula,adscripcion,horario,categoria,n_afil,calle,num,\
@@ -275,7 +275,7 @@ def editar_authPer(request, id):
     form = authPerUpdateForm()
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM authPer WHERE id={0}".format(id))
                 ctx = cur.fetchone()
@@ -299,7 +299,7 @@ def save_edit_p(request, id):
             tel = form.cleaned_data['tel']
             createdat = datetime.now()
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("UPDATE authPer SET app=?,apm=?,nombre=?,parentesco=?,tel=?,createdat=?,authPer_id_id=? WHERE id=?", (app.upper(),apm.upper(), nombre.upper(),parentesco.upper(),tel,createdat,id, id))
                     cnx.commit()
@@ -316,7 +316,7 @@ def edit_h(request, id):
     form = regHUpdateForm()
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM registerH WHERE id={0}".format(id))
                 ctx = cur.fetchone()
@@ -340,7 +340,7 @@ def save_edit_h(request, id):
             t_sangre = form.cleaned_data['t_sangre']
             alergias = form.cleaned_data['alergias']
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("UPDATE registerH SET app=?, apm=?, nombre=?, f_nac=?, edad=?, t_sangre=?, alergias=? WHERE id=?", (app.upper(),apm.upper(),nombre.upper(),f_nac,edad,t_sangre.upper(),alergias.upper(),id))
                     cnx.commit()
@@ -356,7 +356,7 @@ def datos(request, id):
     title = 'Mostrar Datos'
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("select * from worker inner join authPer on worker.id=authPer.authPer_id_id inner join registerH on authPer.authPer_id_id=registerH.worker_id_id and worker.id={0}".format(id))
                 result = cur.fetchall()
@@ -376,7 +376,7 @@ def create_cred(request, id):
     try:
         #img = Image.open('/Users/k3nsh1n/Dev/restExample/static/cred.png')
         #img.show()
-        with sqlite3.connect('db.sqlite3') as cnx:
+        with sqlite3.connect('') as cnx:
             #cnx.row_factory = sqlite3.Row
             cur = cnx.cursor() 
             #cur.execute("SELECT * FROM worker,authPer,registerH on worker.id=authPer.authPer_id_id and worker.id=registerH.worker_id_id WHERE worker.id={0}".format(id))
@@ -412,7 +412,7 @@ def create_sheet(request, id):
     title = 'Crear hoja de Registro'
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and worker.id={0}""".format(id))
                 ctx = cur.fetchall()
