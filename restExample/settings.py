@@ -122,8 +122,12 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     #'/Users/k3nsh1n/Dev/planv/restExample/static',
+<<<<<<< HEAD
     #'C:/Users/jazyi/Dev/restExample/static',
     '/home/catsis/restExample/static',
+=======
+    'C:/Users/jazyi/Dev/restExample/static',
+>>>>>>> c1c9e59edf6b2693c24fe282c3276d12ea48dc47
 ]
 
 # Default primary key field type

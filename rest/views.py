@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+import openpyxl
+import pandas as pd
+import io
+>>>>>>> c1c9e59edf6b2693c24fe282c3276d12ea48dc47
 import os
 import glob
 import sqlite3
@@ -73,7 +79,7 @@ def registro(request):
             createdat = datetime.now()
             entRec = form.cleaned_data['entRec']
             try:
-                with sqlite3.connect("db.sqlite3") as cnx:
+                with sqlite3.connect("") as cnx:
                     cur = cnx.cursor()
                     worker = cur.execute("INSERT INTO worker(app,apm,nombres,edad,matricula,adscripcion,horario,categoria,n_afil,calle,num,colonia,cp,mcpio,tel_t,tel_p,tel_c,createdat, entRec)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", \
                                 (app.upper(),apm.upper(),nombres.upper(),edad,matricula,adscripcion.upper(),horario,categoria.upper(),n_afil,calle.upper(),num,colonia.upper(),cp,mcpio.upper(),tel_t,tel_p,tel_c,entRec.upper(),createdat)) 
@@ -94,7 +100,7 @@ def listado(request):
     title = 'Listado General'
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM worker")
                 ctx = cur.fetchall()
@@ -111,7 +117,7 @@ def delete(request, id):
     if request.method == 'POST':
         print(request.method)
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("DELETE FROM worker WHERE id=?",(id))
                 cnx.commit()
@@ -141,7 +147,7 @@ def regauthper(request, id):
             tel = form.cleaned_data['tel']
             createdat = datetime.now()
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("INSERT INTO authPer(app,apm,nombre,parentesco,tel,createdat,authPer_id_id)VALUES(?,?,?,?,?,?,?)", (app.upper(),apm.upper(),nombre.upper(),parentesco.upper(),tel,createdat,id))
                     cnx.commit()
@@ -157,7 +163,7 @@ def listadoP(request):
     if request.method == 'GET':
         ctx = None
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute('SELECT * FROM authPer')
                 ctx = cur.fetchall()
@@ -184,7 +190,7 @@ def regh(request, id):
             createdat = datetime.now()
             print(app,apm,nombre)
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("INSERT INTO registerH(app,apm,nombre,f_nac,edad,t_sangre,alergias,createdat,worker_id_id)VALUES(?,?,?,?,?,?,?,?,?)", \
                         (app.upper(),apm.upper(),nombre.upper(),f_nac,edad,t_sangre,alergias.upper(),createdat,id))
@@ -201,7 +207,7 @@ def listadoH(request):
     ctx = None
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM registerH")
                 ctx = cur.fetchall()
@@ -219,7 +225,7 @@ def editar(request, id):
     form = workerUpdateForm()
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM worker WHERE id={0}".format(id))
                 ctx = cur.fetchone()
@@ -255,7 +261,7 @@ def save_edit(request, id):
             entRec = form.cleaned_data['entRec']
             createdat = datetime.now()
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("UPDATE worker SET app=?,apm=?,nombres=?,edad=?,matricula=?,adscripcion=?,horario=?,categoria=?,n_afil=?,calle=?,num=?,colonia=?,\
                                 cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,entRec=?,createdat=? WHERE id=?", (app.upper(),apm.upper(),nombres.upper(),edad,matricula,adscripcion.upper(),horario,categoria.upper(),n_afil,calle.upper(),num,\
@@ -274,7 +280,7 @@ def editar_authPer(request, id):
     form = authPerUpdateForm()
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM authPer WHERE id={0}".format(id))
                 ctx = cur.fetchone()
@@ -298,7 +304,7 @@ def save_edit_p(request, id):
             tel = form.cleaned_data['tel']
             createdat = datetime.now()
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("UPDATE authPer SET app=?,apm=?,nombre=?,parentesco=?,tel=?,createdat=?,authPer_id_id=? WHERE id=?", (app.upper(),apm.upper(), nombre.upper(),parentesco.upper(),tel,createdat,id, id))
                     cnx.commit()
@@ -315,7 +321,7 @@ def edit_h(request, id):
     form = regHUpdateForm()
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("SELECT * FROM registerH WHERE id={0}".format(id))
                 ctx = cur.fetchone()
@@ -339,7 +345,7 @@ def save_edit_h(request, id):
             t_sangre = form.cleaned_data['t_sangre']
             alergias = form.cleaned_data['alergias']
             try:
-                with sqlite3.connect('db.sqlite3') as cnx:
+                with sqlite3.connect('') as cnx:
                     cur = cnx.cursor()
                     cur.execute("UPDATE registerH SET app=?, apm=?, nombre=?, f_nac=?, edad=?, t_sangre=?, alergias=? WHERE id=?", (app.upper(),apm.upper(),nombre.upper(),f_nac,edad,t_sangre.upper(),alergias.upper(),id))
                     cnx.commit()
@@ -355,7 +361,7 @@ def datos(request, id):
     title = 'Mostrar Datos'
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("select * from worker inner join authPer on worker.id=authPer.authPer_id_id inner join registerH on authPer.authPer_id_id=registerH.worker_id_id and worker.id={0}".format(id))
                 result = cur.fetchall()
@@ -373,6 +379,7 @@ def create_cred(request, id):
     id = id
     title = 'Crear Credencial'                      
     try:
+<<<<<<< HEAD
         path = Path.cwd()
         qrimg = path.joinpath('qrcode.png')
 
@@ -381,11 +388,17 @@ def create_cred(request, id):
         img_cred = path_static.joinpath('cred.png')
         
         with sqlite3.connect('db.sqlite3') as cnx:
+=======
+        #img = Image.open('/Users/k3nsh1n/Dev/restExample/static/cred.png')
+        #img.show()
+        with sqlite3.connect('') as cnx:
+>>>>>>> c1c9e59edf6b2693c24fe282c3276d12ea48dc47
             #cnx.row_factory = sqlite3.Row
             cur = cnx.cursor()
             cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and registerH.id={0}""".format(id))
             ctx = cur.fetchall()
             cnx.commit()
+<<<<<<< HEAD
             qr = createQR.QRCODE
             qr.createqr_code(ctx)
         with sqlite3.connect('db.sqlite3') as cnx:
@@ -400,6 +413,24 @@ def create_cred(request, id):
             c.drawImage(image='qrcode.png', x=450 , y=540, width=90, height=90)
             c.setFont('Helvetica', size=10)
             c.drawString(x=55, y=490, text=str(name))
+=======
+            nombre = ctx[0][29] + ' ' + ctx[0][30] + ' ' + ctx[0][31]
+            print(f'La longituf es: ' + str(len(ctx)))
+            image = qrcode.make(ctx)
+            image.save('qrimage.png')
+            #create_qr(id)
+            #qrImage = qrcode.make(i)
+            #qrImage.save("qrcodeImage.png")
+            #print(nombre)
+            cred_name = 'credencial' + nombre + '.pdf'
+            c = canvas.Canvas(cred_name)
+            c.drawImage('cred.png', x=10, y=400, width=575, height=400)
+            #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/cred.png', x=10, y=400, width=575, height=400)
+            c.setFont('Helvetica', size=10)
+            c.drawString(x=47, y=450, text=nombre)
+            c.drawImage('qrimage.png', x=450, y=510, width=100, height=100)
+            #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
+>>>>>>> c1c9e59edf6b2693c24fe282c3276d12ea48dc47
             c.showPage()
             c.save()
             
@@ -421,7 +452,7 @@ def create_sheet(request, id):
     title = 'Crear hoja de Registro'
     if request.method == 'GET':
         try:
-            with sqlite3.connect('db.sqlite3') as cnx:
+            with sqlite3.connect('') as cnx:
                 cur = cnx.cursor()
                 cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and worker.id={0}""".format(id))
                 ctx = cur.fetchall()
@@ -569,7 +600,11 @@ def create_sheet(request, id):
                     c.drawString(x=600, y=186, text=ctx[1][37])
                     c.drawString(x=645, y=186, text=ctx[1][34]) 
                     
+<<<<<<< HEAD
                     h3 = ctx[2][31] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
+=======
+                    h3 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
+>>>>>>> c1c9e59edf6b2693c24fe282c3276d12ea48dc47
                     c.drawString(x=45, y=169, text=h3)
                     c.drawString(x=400, y=169, text=str(ctx[2][33]))
                     c.drawString(x=500, y=169, text=ctx[2][32])
@@ -751,8 +786,9 @@ def create_sheet(request, id):
                     c.drawString(x=600, y=151, text=ctx[6][37])
                     c.drawString(x=645, y=151, text=ctx[6][34])
                 
-                c.showPage()
+                    c.showPage()
                 
+<<<<<<< HEAD
                 #c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/CONTRAPORTADA.jpg', x=5, y=0, width=770, height=620)
                 c.drawImage('/home/catsis/restExample/static/CONTRAPORTADA.png', x=0, y=0, width=770, height=620)
                 c.showPage()
@@ -762,8 +798,45 @@ def create_sheet(request, id):
     latest_file = glob.glob('/home/catsis/restExample/hojaRegistro*.pdf')
     last = max(latest_file, key=os.path.getctime)
     file = open(last, "rb")
+=======
+                    c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/CONTRAPORTADA.jpg', x=5, y=0, width=770, height=620)
+                    c.showPage()
+                    c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/CONTRAPORTADA.jpg')
+                    c.showPage()
+                    c.save()
+        except sqlite3.Error as e:
+            print(e)
+    latest_file = glob.glob('C:/Users/jazyi/Dev/planv/restExample/hojaRegistro*.pdf')
+    last = max(latest_file, key=os.path.getctime)
+    file =open(last, 'rb')
+>>>>>>> c1c9e59edf6b2693c24fe282c3276d12ea48dc47
     response = HttpResponse(file)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename="port.pdf"'
     return response
 
+
+
+def create_excel(ctx):
+    df = pd.DataFrame(ctx)
+    df.to_excel('exportDB.xlsx', sheet_name='totales')
+
+
+def export_toExcel(request):
+    title = 'Export Excel'
+    try:
+        with sqlite3.connect('db.sqlite3') as cnx:
+            cur = cnx.cursor()
+            cur.execute("SELECT * FROM worker, authPer, registerH WHERE worker.id=authPer.authPer_id_id AND worker.id=registerH.worker_id_id")
+            ctx = cur.fetchall()
+            cnx.commit()
+            create_excel(ctx)
+    except sqlite3.Error as e:
+        print(e)
+    latest_file = glob.glob('C:/Users/jazyi/Dev/planv/restExample/*.xlsx')
+    last = max(latest_file, key=os.path.getctime)
+    file =open(last, 'rb')
+    response = HttpResponse(file)
+    response.headers['Content-Type'] = 'application/vnd.ms-excel'
+    response.headers['Content-Disposition'] = 'attachment; filename="resume.xlsx"'
+    return response

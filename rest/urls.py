@@ -20,4 +20,5 @@ urlpatterns = [
     path('datos/<int:id>/', views.datos, name='datos'),
     path('create_cred/<int:id>/', views.create_cred, name='create_cred'),
     path('create_sheet/<int:id>/', views.create_sheet, name='create_sheet'),
+    path('export_toExcel/', views.export_toExcel, name='export_toExcel'),
 ]
