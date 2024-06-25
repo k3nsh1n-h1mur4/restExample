@@ -424,11 +424,10 @@ def create_cred(request, id):
             cred_name = 'credencial' + nombre + '.pdf'
             c = canvas.Canvas(cred_name)
             c.drawImage('cred.png', x=10, y=400, width=575, height=400)
-            #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/cred.png', x=10, y=400, width=575, height=400)
             c.setFont('Helvetica', size=10)
             c.drawString(x=47, y=450, text=nombre)
             c.drawImage('qrimage.png', x=450, y=510, width=100, height=100)
-            #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
+            
 >>>>>>> c1c9e59edf6b2693c24fe282c3276d12ea48dc47
             c.showPage()
             c.save()
