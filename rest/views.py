@@ -389,8 +389,7 @@ def create_cred(request, id):
         
         with sqlite3.connect('db.sqlite3') as cnx:
 =======
-        #img = Image.open('/Users/k3nsh1n/Dev/restExample/static/cred.png')
-        #img.show()
+       ()
         with sqlite3.connect('') as cnx:
 >>>>>>> c1c9e59edf6b2693c24fe282c3276d12ea48dc47
             #cnx.row_factory = sqlite3.Row
@@ -401,7 +400,7 @@ def create_cred(request, id):
 <<<<<<< HEAD
             qr = createQR.QRCODE
             qr.createqr_code(ctx)
-        with sqlite3.connect('db.sqlite3') as cnx:
+        with sqlite3.connect('') as cnx:
             cur1 = cnx.cursor()
             cur1.execute("SELECT * FROM registerH WHERE id={0}".format(id))
             result = cur1.fetchone()
