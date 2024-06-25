@@ -1,5 +1,9 @@
+import os
+import glob
 import sqlite3
 import json
+from . import createQR
+from pathlib import Path
 from sqlite3.dbapi2 import ProgrammingError
 from plyer import notification
 from datetime import datetime
@@ -254,8 +258,8 @@ def save_edit(request, id):
                 with sqlite3.connect('db.sqlite3') as cnx:
                     cur = cnx.cursor()
                     cur.execute("UPDATE worker SET app=?,apm=?,nombres=?,edad=?,matricula=?,adscripcion=?,horario=?,categoria=?,n_afil=?,calle=?,num=?,colonia=?,\
-                                cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,entRec=?,createdat=? WHERE id=?", (app,apm,nombres,edad,matricula,adscripcion,horario,categoria,n_afil,calle,num,\
-                                colonia,cp,mcpio,tel_t,tel_p,tel_c,entRec,createdat,id))
+                                cp=?,mcpio=?,tel_t=?,tel_p=?,tel_c=?,entRec=?,createdat=? WHERE id=?", (app.upper(),apm.upper(),nombres.upper(),edad,matricula,adscripcion.upper(),horario,categoria.upper(),n_afil,calle.upper(),num,\
+                                colonia.upper(),cp,mcpio.upper(),tel_t,tel_p,tel_c,entRec,createdat,id))
                 nt = notification.notify(title='Actualizacion', message='Datos actualizados', timeout=10)
                 return redirect('listado')
             except sqlite3.ProgrammingError as e:
@@ -369,37 +373,47 @@ def create_cred(request, id):
     id = id
     title = 'Crear Credencial'                      
     try:
-        #img = Image.open('/Users/k3nsh1n/Dev/restExample/static/cred.png')
-        #img.show()
+        path = Path.cwd()
+        qrimg = path.joinpath('qrcode.png')
+
+        path1 = Path.cwd()
+        path_static = path1.joinpath('static')
+        img_cred = path_static.joinpath('cred.png')
+        
         with sqlite3.connect('db.sqlite3') as cnx:
             #cnx.row_factory = sqlite3.Row
-            cur = cnx.cursor() 
-            #cur.execute("SELECT * FROM worker,authPer,registerH on worker.id=authPer.authPer_id_id and worker.id=registerH.worker_id_id WHERE worker.id={0}".format(id))
-            cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and worker.id={0}""".format(id))
+            cur = cnx.cursor()
+            cur.execute("""select * from worker inner join authPer on worker.id=authPer_id_id inner join registerH on authPer_id_id=registerH.worker_id_id and registerH.id={0}""".format(id))
             ctx = cur.fetchall()
             cnx.commit()
-            nombre = ctx[0][29] + ' ' + ctx[0][30] + ' ' + ctx[0][31]
-            print(f'La longituf es: ' + str(len(ctx)))
-            image = qrcode.make(ctx)
-            image.save('qrimage.png')
-            #create_qr(id)
-            #qrImage = qrcode.make(i)
-            #qrImage.save("qrcodeImage.png")
-            #print(nombre)
-            cred_name = 'credencial' + nombre + '.pdf'
-            c = canvas.Canvas(cred_name)
-            c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/cred.png', x=10, y=400, width=575, height=400)
-            #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/cred.png', x=10, y=400, width=575, height=400)
+            qr = createQR.QRCODE
+            qr.createqr_code(ctx)
+        with sqlite3.connect('db.sqlite3') as cnx:
+            cur1 = cnx.cursor()
+            cur1.execute("SELECT * FROM registerH WHERE id={0}".format(id))
+            result = cur1.fetchone()
+            print(result)
+            cnx.commit()
+            name = result[1] + ' ' + result[2] + ' ' + result[3]
+            c = canvas.Canvas("Credencial.pdf")
+            c.drawImage(img_cred, x=10, y=450, width=570, height=350)
+            c.drawImage(image='qrcode.png', x=450 , y=540, width=90, height=90)
             c.setFont('Helvetica', size=10)
-            c.drawString(x=47, y=450, text=nombre)
-            c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
-            #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
+            c.drawString(x=55, y=490, text=str(name))
             c.showPage()
             c.save()
+            
     except OSError as e:
         print(e)
-    response = HttpResponse('Credencial Generada', 'application/json')
+    latest_file = glob.glob('C:/Users/jazyi/Dev/sysplanv/restExample/credencial*.pdf')
+    last = max(latest_file, key=os.path.getctime)
+    file = open(last, "rb")
+    response = HttpResponse(file)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename="cred.pdf"'
     return response
+#esponse = HttpResponse('Credencial Generada', 'application/json')
+#    return response
 
 
 def create_sheet(request, id):
@@ -417,9 +431,12 @@ def create_sheet(request, id):
                 name_reg = 'hojaRegistro' + name + '.pdf'
                 c = canvas.Canvas(name_reg)
                 c.setPageSize(landscape(letter))
-                c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
+                c.drawImage('/home/catsis/restExample/qrimage.png', x=10, y=400, width=575, height=400)
+                #c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/qrimage.png', x=450, y=510, width=100, height=100)
                 #c.drawImage('C:/Users/jazyi/Dev/planv/restExample/static/PORTADA.jpg', x=5, y=0, width=770, height=620)
-                c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/PORTADA.jpg', x=5, y=0, width=770, height=620)
+                
+                c.drawImage('/home/catsis/restExample/static/PORTADA.jpg', x=5, y=0, width=770, height=620)
+                #c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/PORTADA.jpg', x=5, y=0, width=770, height=620)
                 #c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/CONTRAPORTADA.jpg', x=5, y=0, width=770, height=620)
                 c.setFont('Helvetica', size=8)
                 if len(ctx) == 1:
@@ -507,6 +524,12 @@ def create_sheet(request, id):
                     c.drawString(x=645, y=188, text=ctx[1][34])
 
                 elif len(ctx) == 3:
+                    print(ctx)
+                    print(ctx[2][32])
+                    print(ctx[2][33])
+                    print(ctx[2][34])
+                    print(ctx[2][35])
+                    print(ctx[2][37])
                     c.drawString(x=80, y=495, text=ctx[0][1])
                     c.drawString(x=180, y=495, text=ctx[0][2])
                     c.drawString(x=310, y=495, text=ctx[0][3])
@@ -534,21 +557,21 @@ def create_sheet(request, id):
 
                     h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
                     c.drawString(x=45, y=203, text=h1)
-                    c.drawString(x=400, y=203, text=str(ctx[0][3]))
+                    c.drawString(x=400, y=203, text=str(ctx[0][33]))
                     c.drawString(x=500, y=203, text=ctx[0][32])
                     c.drawString(x=600, y=203, text=ctx[0][37])
                     c.drawString(x=645, y=203, text=ctx[0][34])
                     
                     h2 = ctx[1][29] + '  ' + ctx[1][30] + '  ' + ctx[1][31]
-                    c.drawString(x=45, y=186, text=h1)
-                    c.drawString(x=400, y=186, text=str(ctx[1][3]))
+                    c.drawString(x=45, y=186, text=h2)
+                    c.drawString(x=400, y=186, text=str(ctx[1][33]))
                     c.drawString(x=500, y=186, text=ctx[1][32])
                     c.drawString(x=600, y=186, text=ctx[1][37])
                     c.drawString(x=645, y=186, text=ctx[1][34]) 
                     
-                    h3 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
-                    c.drawString(x=45, y=169, text=h1)
-                    c.drawString(x=400, y=169, text=str(ctx[2][3]))
+                    h3 = ctx[2][31] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
+                    c.drawString(x=45, y=169, text=h3)
+                    c.drawString(x=400, y=169, text=str(ctx[2][33]))
                     c.drawString(x=500, y=169, text=ctx[2][32])
                     c.drawString(x=600, y=169, text=ctx[2][37])
                     c.drawString(x=645, y=169, text=ctx[2][34])
@@ -587,14 +610,14 @@ def create_sheet(request, id):
 
                     h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
                     c.drawString(x=45, y=203, text=h1)
-                    c.drawString(x=400, y=203, text=str(ctx[0][3]))
+                    c.drawString(x=400, y=203, text=str(ctx[0][33]))
                     c.drawString(x=500, y=203, text=ctx[0][32])
                     c.drawString(x=600, y=203, text=ctx[0][37])
                     c.drawString(x=645, y=203, text=ctx[0][34])
                     
                     h2 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
                     c.drawString(x=45, y=186, text=h2)
-                    c.drawString(x=400, y=186, text=str(ctx[2][3]))
+                    c.drawString(x=400, y=186, text=str(ctx[2][33]))
                     c.drawString(x=500, y=186, text=ctx[2][32])
                     c.drawString(x=600, y=186, text=ctx[2][37])
                     c.drawString(x=645, y=186, text=ctx[2][34]) 
@@ -649,21 +672,21 @@ def create_sheet(request, id):
 
                     h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
                     c.drawString(x=45, y=203, text=h1)
-                    c.drawString(x=400, y=203, text=str(ctx[0][3]))
+                    c.drawString(x=400, y=203, text=str(ctx[0][33]))
                     c.drawString(x=500, y=203, text=ctx[0][32])
                     c.drawString(x=600, y=203, text=ctx[0][37])
                     c.drawString(x=645, y=203, text=ctx[0][34])
                     
                     h2 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
                     c.drawString(x=45, y=186, text=h2)
-                    c.drawString(x=400, y=186, text=str(ctx[2][3]))
+                    c.drawString(x=400, y=186, text=str(ctx[2][33]))
                     c.drawString(x=500, y=186, text=ctx[2][32])
                     c.drawString(x=600, y=186, text=ctx[2][37])
                     c.drawString(x=645, y=186, text=ctx[2][34]) 
                     
                     h3 = ctx[4][29] + '  ' + ctx[4][30] + '  ' + ctx[4][31]
                     c.drawString(x=45, y=169, text=h3)
-                    c.drawString(x=400, y=169, text=str(ctx[5][3]))
+                    c.drawString(x=400, y=169, text=str(ctx[5][33]))
                     c.drawString(x=500, y=169, text=ctx[5][32])
                     c.drawString(x=600, y=169, text=ctx[5][37])
                     c.drawString(x=645, y=169, text=ctx[5][34])
@@ -702,40 +725,44 @@ def create_sheet(request, id):
 
                     h1 = ctx[0][29] + '  ' + ctx[0][30] + '  ' + ctx[0][31]
                     c.drawString(x=45, y=203, text=h1)
-                    c.drawString(x=400, y=203, text=str(ctx[0][3]))
+                    c.drawString(x=400, y=203, text=str(ctx[0][33]))
                     c.drawString(x=500, y=203, text=ctx[0][32])
                     c.drawString(x=600, y=203, text=ctx[0][37])
                     c.drawString(x=645, y=203, text=ctx[0][34])
                     
                     h2 = ctx[2][29] + '  ' + ctx[2][30] + '  ' + ctx[2][31]
                     c.drawString(x=45, y=186, text=h2)
-                    c.drawString(x=400, y=186, text=str(ctx[2][3]))
+                    c.drawString(x=400, y=186, text=str(ctx[2][33]))
                     c.drawString(x=500, y=186, text=ctx[2][32])
                     c.drawString(x=600, y=186, text=ctx[2][37])
                     c.drawString(x=645, y=186, text=ctx[2][34]) 
                     
                     h3 = ctx[4][29] + '  ' + ctx[4][30] + '  ' + ctx[4][31]
                     c.drawString(x=45, y=169, text=h3)
-                    c.drawString(x=400, y=169, text=str(ctx[5][3]))
+                    c.drawString(x=400, y=169, text=str(ctx[5][33]))
                     c.drawString(x=500, y=169, text=ctx[5][32])
                     c.drawString(x=600, y=169, text=ctx[5][37])
                     c.drawString(x=645, y=169, text=ctx[5][34])
                     
                     h4 = ctx[6][29] + '  ' + ctx[6][30] + '  ' + ctx[6][31]
                     c.drawString(x=45, y=151, text=h4)
-                    c.drawString(x=400, y=151, text=str(ctx[6][3]))
+                    c.drawString(x=400, y=151, text=str(ctx[6][33]))
                     c.drawString(x=500, y=151, text=ctx[6][32])
                     c.drawString(x=600, y=151, text=ctx[6][37])
                     c.drawString(x=645, y=151, text=ctx[6][34])
                 
                 c.showPage()
                 
-                c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/CONTRAPORTADA.jpg', x=5, y=0, width=770, height=620)
+                #c.drawImage('/Users/k3nsh1n/Dev/planv/restExample/static/CONTRAPORTADA.jpg', x=5, y=0, width=770, height=620)
+                c.drawImage('/home/catsis/restExample/static/CONTRAPORTADA.png', x=0, y=0, width=770, height=620)
                 c.showPage()
                 c.save()
         except sqlite3.Error as e:
             print(e)
-    response = HttpResponse()
+    latest_file = glob.glob('/home/catsis/restExample/hojaRegistro*.pdf')
+    last = max(latest_file, key=os.path.getctime)
+    file = open(last, "rb")
+    response = HttpResponse(file)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'attachment; filename="port.pdf"'
     return response

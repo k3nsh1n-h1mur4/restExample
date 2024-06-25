@@ -25,6 +25,7 @@ class workerModel(models.Model):
         ("UMF 53","UMF 53"),
         ("UMF 54","UMF 54"),
         ("UMF 88","UMF 88"),
+        ("UMF 92", "UMF 92"),
         ("UMF 93","UMF 93"),
         ("UMF 171","UMF 171"),
         ("UMF 178","UMF 178"),
