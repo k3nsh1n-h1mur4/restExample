@@ -121,13 +121,7 @@ STATIC_URL = 'static/'
 #STATIC_ROOT = '/home/catsis/restExample/static/'
 
 STATICFILES_DIRS = [
-    #'/Users/k3nsh1n/Dev/planv/restExample/static',
-<<<<<<< HEAD
-    #'C:/Users/jazyi/Dev/restExample/static',
-    '/home/catsis/restExample/static',
-=======
-    'C:/Users/jazyi/Dev/restExample/static',
->>>>>>> c1c9e59edf6b2693c24fe282c3276d12ea48dc47
+    'C:/Users/jazyi/Dev/sysplanv/restExample/static',
 ]
 
 # Default primary key field type
